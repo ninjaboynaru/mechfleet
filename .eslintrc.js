@@ -1,4 +1,30 @@
+const path = require('path');
+
 module.exports = {
-  root: true,
-  extends: '@react-native-community',
+	env: {
+		es6: true,
+	},
+	extends: [
+		'airbnb',
+		'plugin:react/recommended',
+		'@react-native-community',
+		path.resolve(__dirname, 'linting/.eslintrc-general.js'),
+		path.resolve(__dirname, 'linting/.eslintrc-react.js')
+	],
+	globals: {
+		Atomics: 'readonly',
+		SharedArrayBuffer: 'readonly',
+	},
+	parserOptions: {
+		ecmaFeatures: {
+			jsx: true,
+		},
+		ecmaVersion: 2018,
+		sourceType: 'module',
+	},
+	plugins: [
+		'react',
+	],
+	rules: {
+	},
 };
