@@ -7,7 +7,6 @@ module.exports = {
 	extends: [
 		'airbnb',
 		'plugin:react/recommended',
-		'@react-native-community',
 		path.resolve(__dirname, 'linting/.eslintrc-general.js'),
 		path.resolve(__dirname, 'linting/.eslintrc-react.js')
 	],
