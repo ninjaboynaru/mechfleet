@@ -1,6 +1,18 @@
 import React from 'react';
-import { Text } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
+import { Container, Content, Button } from 'native-base';
+
+const styles = StyleSheet.create({
+	container: {
+	}
+});
 
 export default function Assets() {
-	return <Text>Hello World</Text>;
+	return (
+		<Container>
+			<Content padder contentContainerStyle={styles.container}>
+				<Button rounded block info><Text>Click Me!</Text></Button>
+			</Content>
+		</Container>
+	);
 }
