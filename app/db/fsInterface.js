@@ -1,12 +1,12 @@
 import fs from 'react-native-fs';
 
-const fleetDataDirectory = `${fs.DocumentDirectoryPath}/fleet_data`;
-const assetsFilePath = `${fleetDataDirectory}/assets.json`;
-const tasksFilePath = `${fleetDataDirectory}/tasks.json`;
-const partsFilePath = `${fleetDataDirectory}/parts.json`;
+const FLEET_DATA_DIRECTORY = `${fs.DocumentDirectoryPath}/fleet_data`;
+const ASSETS_FILE_PATH = `${FLEET_DATA_DIRECTORY}/assets.json`;
+const TASKS_FILE_PATH = `${FLEET_DATA_DIRECTORY}/tasks.json`;
+const PARTS_FILE_PATH = `${FLEET_DATA_DIRECTORY}/parts.json`;
 
 function ensureDataDirectory() {
-	return fs.mkdir(fleetDataDirectory);
+	return fs.mkdir(FLEET_DATA_DIRECTORY);
 }
 
 function ensureFile(filePath) {
@@ -18,19 +18,35 @@ function ensureFile(filePath) {
 }
 
 function ensureAssetsFile() {
-	return ensureFile(assetsFilePath);
+	return ensureFile(ASSETS_FILE_PATH);
 }
 
 function ensureTasksFile() {
-	return ensureFile(tasksFilePath);
+	return ensureFile(TASKS_FILE_PATH);
 }
 
 function ensurePartsFile() {
-	return ensureFile(partsFilePath);
+	return ensureFile(PARTS_FILE_PATH);
+}
+
+function readFileJson(filePath) {
+	return fs.readFile(filePath).then((fileContents) => JSON.parse(fileContents));
 }
 
 export default new function() {
 	this.ensureFileIntegrity = function() {
 		return ensureDataDirectory().then(ensureAssetsFile).then(ensureTasksFile).then(ensurePartsFile);
+	};
+
+	this.readAssetsFile = function() {
+		return readFileJson(ASSETS_FILE_PATH);
+	};
+
+	this.readTasksFile = function() {
+		return readFileJson(TASKS_FILE_PATH);
+	};
+
+	this.readPartsFile = function() {
+		return readFileJson(PARTS_FILE_PATH);
 	};
 }();

@@ -1,19 +1,17 @@
+import jsonata from 'jsonata';
 import fsInterface from './fsInterface';
 
-const sampleAssets = [
-	{
-		_id: '1',
-		name: 'Mech 1',
-		model: 'V1',
-		taskCount: 2
-	},
-	{
-		_id: '2',
-		name: 'Mech 2',
-		model: 'V1',
-		taskCount: 6
-	}
-];
+function addTaskCountToAssets(assets) {
+	return fsInterface.readTasksFile().then((tasks) => {
+		for (const asset of assets) {
+			const queryExpression = jsonata(`$count($[parentAsset='${asset._id}'])`);
+			const taskCount = queryExpression.evaluate(tasks);
+			asset.taskCount = taskCount;
+		}
+
+		return assets;
+	});
+}
 
 export default new function db() {
 	this.init = function() {
@@ -21,9 +19,10 @@ export default new function db() {
 	};
 
 	this.getAssets = function() {
-		// let expandedAssets = sampleAssets.concat(sampleAssets);
-		// expandedAssets = expandedAssets.concat(expandedAssets);
-		// expandedAssets = expandedAssets.concat(expandedAssets);
-		return Promise.resolve(sampleAssets);
+		return fsInterface.readAssetsFile().then(addTaskCountToAssets);
+	};
+
+	this.getTasks = function() {
+
 	};
 }();
