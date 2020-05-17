@@ -3,23 +3,9 @@ import { StyleSheet, View } from 'react-native';
 import { StyleProvider, Spinner, H1 } from 'native-base';
 import getTheme from './native-base-theme/components';
 import theme from './native-base-theme/variables/platform';
+import { ErrorDisplay, LoadingDisplay } from './app/metaComponents';
 import MainNavigation from './app/MainNavigation';
 import db from './app/db/db';
-
-const styles = StyleSheet.create({
-	centeredInfoView: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-	},
-	errorText: {
-		color: 'red'
-	}
-});
-
-function CenteredInfoView(props) {
-	return <View style={styles.centeredInfoView}>{props.children}</View>
-}
 
 export default class App extends React.Component {
 	constructor(props) {
@@ -43,15 +29,10 @@ export default class App extends React.Component {
 		let toRender = null;
 
 		if (dbInitializeError === true) {
-			toRender = <CenteredInfoView><H1 style={styles.errorText}>Error Initializing Data Storage</H1></CenteredInfoView>
+			toRender = <ErrorDisplay>Error Initializing Data Storage</ErrorDisplay>
 		}
 		else if (dbInitialized === false) {
-			toRender = (
-				<CenteredInfoView>
-					<Spinner />
-					<H1>Initializing Data Storage</H1>
-				</CenteredInfoView>
-			);
+			toRender = <LoadingDisplay>Initializing Data Storage</LoadingDisplay>
 		}
 		else {
 			toRender = <MainNavigation/>

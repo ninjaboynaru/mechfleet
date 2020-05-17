@@ -1,36 +1,29 @@
-import fs from 'react-native-fs';
+import fsInterface from './fsInterface';
 
-const fleetDataDirectory = `${fs.DocumentDirectoryPath}/fleet_data`;
-const assetsFilePath = `${fleetDataDirectory}/assets.json`;
-const tasksFilePath = `${fleetDataDirectory}/tasks.json`;
-const partsFilePath = `${fleetDataDirectory}/parts.json`;
-
-function ensureDataDirectory() {
-	return fs.mkdir(fleetDataDirectory);
-}
-
-function ensureFile(filePath) {
-	return fs.exists(filePath).then((exists) => {
-		if (exists === false) {
-			return fs.writeFile(filePath, '', 'utf8');
-		}
-	});
-}
-
-function ensureAssetsFile() {
-	return ensureFile(assetsFilePath);
-}
-
-function ensureTasksFile() {
-	return ensureFile(tasksFilePath);
-}
-
-function ensurePartsFile() {
-	return ensureFile(partsFilePath);
-}
+const sampleAssets = [
+	{
+		_id: '1',
+		name: 'Mech 1',
+		model: 'V1',
+		taskCount: 2
+	},
+	{
+		_id: '2',
+		name: 'Mech 2',
+		model: 'V1',
+		taskCount: 6
+	}
+];
 
 export default new function db() {
 	this.init = function() {
-		return ensureDataDirectory().then(ensureAssetsFile).then(ensureTasksFile).then(ensurePartsFile);
+		return fsInterface.ensureFileIntegrity();
+	};
+
+	this.getAssets = function() {
+		// let expandedAssets = sampleAssets.concat(sampleAssets);
+		// expandedAssets = expandedAssets.concat(expandedAssets);
+		// expandedAssets = expandedAssets.concat(expandedAssets);
+		return Promise.resolve(sampleAssets);
 	};
 }();
