@@ -1,5 +1,10 @@
 import fs from 'react-native-fs';
 
+const fleetDataDirectory = `${fs.DocumentDirectoryPath}/fleet_data`;
+const assetsFilePath = `${fleetDataDirectory}/assets.json`;
+const tasksFilePath = `${fleetDataDirectory}/tasks.json`;
+const partsFilePath = `${fleetDataDirectory}/parts.json`;
+
 function ensureDataDirectory() {
 	return fs.mkdir(fleetDataDirectory);
 }
@@ -23,11 +28,6 @@ function ensureTasksFile() {
 function ensurePartsFile() {
 	return ensureFile(partsFilePath);
 }
-
-const fleetDataDirectory = `${fs.DocumentDirectoryPath}/fleet_data`;
-const assetsFilePath = `${fleetDataDirectory}/assets.json`;
-const tasksFilePath = `${fleetDataDirectory}/tasks.json`;
-const partsFilePath = `${fleetDataDirectory}/parts.json`;
 
 export default new function() {
 	this.ensureFileIntegrity = function() {
