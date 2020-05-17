@@ -12,6 +12,7 @@ module.exports = {
 		'no-restricted-syntax': 0,
 		'no-continue': 0,
 		'no-plusplus': 0,
+		'no-console': 0,
 		'no-use-before-define': 0,
 		'guard-for-in': 0,
 		'default-case': 0,
