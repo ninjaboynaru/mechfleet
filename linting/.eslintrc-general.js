@@ -21,6 +21,6 @@ module.exports = {
 		'space-before-function-paren': ['error', 'never'],
 		'comma-dangle': ['error', 'never'],
 		'indent': ['error', 'tab', {'MemberExpression': 'off', 'SwitchCase': 1}],
-		'brace-style': ['error', 'stroustrup'],
+		'brace-style': ['error', 'stroustrup', { "allowSingleLine": true }],
 	}
 }
