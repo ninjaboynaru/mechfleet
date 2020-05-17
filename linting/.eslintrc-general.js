@@ -17,6 +17,7 @@ module.exports = {
 		'guard-for-in': 0,
 		'default-case': 0,
 		'no-useless-constructor': 0,
+		'semi': ['error', 'always', { 'omitLastInOneLineBlock': true }],
 		'object-curly-newline': ['error', {'consistent':true}],
 		'space-before-function-paren': ['error', 'never'],
 		'comma-dangle': ['error', 'never'],
