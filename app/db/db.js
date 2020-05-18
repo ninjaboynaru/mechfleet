@@ -23,6 +23,14 @@ export default new function db() {
 	};
 
 	this.getTasks = function() {
+		return fsInterface.readTasksFile();
+	};
 
+	this.getAssetTasks = function(assetId) {
+		return this.getTasks().then((tasks) => {
+			const queryExpression = jsonata(`[$[parentAsset='${assetId}']]`);
+			const matchingTasks = queryExpression.evaluate(tasks);
+			return matchingTasks;
+		});
 	};
 }();

@@ -19,11 +19,10 @@ export default class Assets extends React.Component {
 		super(props);
 		this.renderAssetCard = this.renderAssetCard.bind(this);
 		this.onAssetCardPress = this.onAssetCardPress.bind(this);
-		this.state = { assets: null, loading: false, loadingError: false };
+		this.state = { assets: null, loading: true, loadingError: false };
 	}
 
 	componentDidMount() {
-		this.setState({ loading: true });
 		db.getAssets().then(
 			(assets) => {
 				this.setState({ assets, loading: false });
@@ -36,11 +35,12 @@ export default class Assets extends React.Component {
 
 	// eslint-disable-next-line
 	onAssetCardPress(asset) {
-		console.log(`ASSET CLICK: ${asset._id}`);
+		const navigation = this.props.navigation;
+		navigation.navigate('Asset Info', asset);
 	}
 
 	buildAssetList() {
-		const { assets } = this.state;
+		const assets = this.state.assets;
 		return (
 			<FlatList
 				style={styles.assetListContainer}
@@ -63,7 +63,7 @@ export default class Assets extends React.Component {
 		const { loading, loadingError } = this.state;
 
 		if (loadingError === true) {
-			return <ErrorDisplay>Error loading assets</ErrorDisplay>;
+			return <ErrorDisplay>Error Loading Assets</ErrorDisplay>;
 		}
 		if (loading === true) {
 			return <LoadingDisplay>Loading Assets</LoadingDisplay>;
