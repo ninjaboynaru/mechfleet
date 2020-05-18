@@ -26,11 +26,25 @@ export default new function db() {
 		return fsInterface.readTasksFile();
 	};
 
+	this.getParts = function() {
+		return fsInterface.readPartsFile();
+	};
+
 	this.getAssetTasks = function(assetId) {
 		return this.getTasks().then((tasks) => {
 			const queryExpression = jsonata(`[$[parentAsset='${assetId}']]`);
 			const matchingTasks = queryExpression.evaluate(tasks);
 			return matchingTasks;
+		});
+	};
+
+	this.getPartsById = function(partIds) {
+		return this.getParts().then((parts) => {
+			const queryExpression = jsonata('[$[_id in $partIds]]');
+			queryExpression.assign('partIds', partIds);
+
+			const matchingParts = queryExpression.evaluate(parts);
+			return matchingParts;
 		});
 	};
 }();

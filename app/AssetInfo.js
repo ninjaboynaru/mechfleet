@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Container, Content, H1, H3, Button, Text } from 'native-base';
+import { Container, Content, H1, Button, Text } from 'native-base';
 import { ErrorDisplay, LoadingDisplay } from './metaComponents';
 import TaskCard from './TaskCard';
 import db from './db/db';
@@ -9,19 +9,13 @@ const styles = StyleSheet.create({
 	infoSection: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		alignItems: 'flex-start',
 		marginBottom: 12
 	},
-	infoSection__textSection: {
-		flexDirection: 'column',
-		justifyContent: 'space-around',
-		alignSelf: 'stretch'
+	infoText: {
 	},
-	infoSection__controls: {
-		justifyContent: 'space-between',
-		alignItems: 'center'
+	infoControls: {
 	},
-	controls__item: {
+	infoControls__item: {
 		marginVertical: 5
 	},
 	taskList: {
@@ -69,7 +63,8 @@ export default class AssetInfo extends React.Component {
 	}
 
 	onTaskCardPress(task) {
-
+		const navigation = this.props.navigation;
+		navigation.navigate('Task Info', task);
 	}
 
 	buildInfoSection() {
@@ -77,19 +72,19 @@ export default class AssetInfo extends React.Component {
 
 		return (
 			<View style={styles.infoSection}>
-				<View style={styles.infoSection__textSection}>
+				<View style={styles.intoText}>
 					<H1>{asset.name}</H1>
-					<H3>{asset.model}</H3>
-					<H3>Status: {asset.status}</H3>
+					<Text>{asset.model}</Text>
+					<Text>Status: {asset.status}</Text>
 				</View>
-				<View style={styles.infoSection__controls}>
-					<Button rounded block danger style={styles.controls__item} onPress={this.onDeletePress}>
+				<View style={styles.intoControls}>
+					<Button rounded block danger style={styles.infoControls__item} onPress={this.onDeletePress}>
 						<Text>DELETE</Text>
 					</Button>
-					<Button primary rounded block style={styles.controls__item} onPress={this.onEditPress}>
+					<Button primary rounded block style={styles.infoControls__item} onPress={this.onEditPress}>
 						<Text>EDIT</Text>
 					</Button>
-					<Button light rounded block style={styles.controls__item} onPress={this.onTaskArchivePress}>
+					<Button light rounded block style={styles.infoControls__item} onPress={this.onTaskArchivePress}>
 						<Text>TASK ARCHIVE</Text>
 					</Button>
 				</View>
