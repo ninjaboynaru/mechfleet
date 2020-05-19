@@ -15,9 +15,12 @@ export default class EditAsset extends React.Component {
 		this.onStatusChange = this.onStatusChange.bind(this);
 		this.state = { name: '', noun: '', model: '', status: 1 };
 
-		if (this.asset) {
+		if (this.editType === EDIT_TYPE.EDIT) {
 			const asset = this.asset;
 			this.state = { name: asset.name, noun: asset.noun, model: asset.model, status: asset.status };
+		}
+		else {
+			this.props.navigation.setOptions({ title: 'New Asset' });
 		}
 	}
 
