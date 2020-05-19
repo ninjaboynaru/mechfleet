@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Container, Content, H1, Button, Text } from 'native-base';
 import { ErrorDisplay, LoadingDisplay } from '../metaComponents';
 import TaskCard from '../ItemCards/TaskCard';
+import assetStatusData from '../assetStatusData';
 import db from '../db/db';
 
 const styles = StyleSheet.create({
@@ -69,6 +70,7 @@ export default class AssetInfo extends React.Component {
 
 	buildInfoSection() {
 		const asset = this.asset;
+		const assetText = assetStatusData.getStatusData(asset.status).displayName;
 
 		return (
 			<View style={styles.infoSection}>
@@ -76,7 +78,7 @@ export default class AssetInfo extends React.Component {
 					<H1>{asset.name}</H1>
 					<Text>{asset.noun}</Text>
 					<Text>{asset.model}</Text>
-					<Text>Status: {asset.status}</Text>
+					<Text>Status: {assetText}</Text>
 				</View>
 				<View style={styles.intoControls}>
 					<Button rounded block danger style={styles.infoControls__item} onPress={this.onDeletePress}>

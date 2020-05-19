@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { H1, H3, Icon } from 'native-base';
+import assetStatusData from '../assetStatusData';
 
 const styles = StyleSheet.create({
 	assetCard: {
@@ -12,9 +13,7 @@ const styles = StyleSheet.create({
 		borderColor: 'rgba(1, 1, 1, 0.2)'
 	},
 	statusBlock: {
-		width: '10%',
-		backgroundColor: 'green'
-
+		width: '10%'
 	},
 	infoContainer: {
 		flexGrow: 1,
@@ -30,10 +29,14 @@ const styles = StyleSheet.create({
 });
 
 export default function AssetCard({ asset, onPress }) {
+	const statusColor = assetStatusData.getStatusData(asset.status).color;
+	const statusColorStyle = { backgroundColor: statusColor };
+
+
 	return (
 		<TouchableOpacity onPress={onPress}>
 			<View style={styles.assetCard}>
-				<View style={styles.statusBlock} />
+				<View style={[styles.statusBlock, statusColorStyle]} />
 				<View style={styles.infoContainer}>
 					<H1>{asset.name}</H1>
 					<Text>{asset.model}</Text>

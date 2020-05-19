@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Container, Content, Form, Item, Input, Picker, Label, Button, Text, Toast } from 'native-base';
 import { LoadingDisplay } from '../metaComponents';
-import assetStatusMap from '../assetStatusMap';
+import assetStatusData from '../assetStatusData';
 import db from '../db/db';
 
 const controlsStyle = {
@@ -91,7 +91,7 @@ export default class EditAsset extends React.Component {
 	buildStatusPicker() {
 		const pickerItems = [];
 
-		for (const statusData of assetStatusMap) {
+		for (const statusData of assetStatusData.statusMap) {
 			const pickerItem = <Picker.Item label={statusData.displayName} value={statusData.value} key={statusData.value} />;
 			pickerItems.push(pickerItem);
 		}
