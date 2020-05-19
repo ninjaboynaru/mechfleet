@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Container, Content, H1, Button, Text } from 'native-base';
-import { ErrorDisplay, LoadingDisplay } from './metaComponents';
-import TaskCard from './TaskCard';
-import db from './db/db';
+import { ErrorDisplay, LoadingDisplay } from '../metaComponents';
+import TaskCard from '../ItemCards/TaskCard';
+import db from '../db/db';
 
 const styles = StyleSheet.create({
 	infoSection: {

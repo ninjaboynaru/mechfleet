@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Container, Content, H1, Button, Text } from 'native-base';
-import { ErrorDisplay, LoadingDisplay } from './metaComponents';
-import PartCard from './PartCard';
-import db from './db/db';
+import { ErrorDisplay, LoadingDisplay } from '../metaComponents';
+import PartCard from '../ItemCards/PartCard';
+import db from '../db/db';
 
 const styles = StyleSheet.create({
 	infoSection: {
@@ -39,7 +39,6 @@ export default class TaskInfo extends React.Component {
 	componentDidMount() {
 		db.getPartsById(this.task.associatedParts).then(
 			(parts) => {
-				console.log('GOT PARTS: ', parts);
 				this.setState({ parts, loading: false });
 			},
 			() => {

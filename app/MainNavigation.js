@@ -2,9 +2,9 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Assets from './Assets';
-import AssetInfo from './AssetInfo';
-import TaskInfo from './TaskInfo';
+import Assets from './MainScreens/Assets';
+import AssetInfo from './MainScreens/AssetInfo';
+import TaskInfo from './MainScreens/TaskInfo';
 
 const stack = createStackNavigator();
 

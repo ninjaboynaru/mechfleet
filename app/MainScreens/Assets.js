@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View, FlatList } from 'react-native';
-import { ErrorDisplay, LoadingDisplay } from './metaComponents';
-import AssetCard from './AssetCard';
-import db from './db/db';
+import { ErrorDisplay, LoadingDisplay } from '../metaComponents';
+import AssetCard from '../ItemCards/AssetCard';
+import db from '../db/db';
 
 const styles = StyleSheet.create({
 	assetListContainer: {
