@@ -12,6 +12,7 @@ const styles = StyleSheet.create({
 		marginBottom: 12
 	},
 	infoText: {
+		flex: 1
 	},
 	infoControls: {
 	},
@@ -51,7 +52,7 @@ export default class AssetInfo extends React.Component {
 	}
 
 	onEditPress() {
-
+		this.props.navigation.navigate('Edit Asset', this.asset);
 	}
 
 	onTaskArchivePress() {
@@ -63,8 +64,7 @@ export default class AssetInfo extends React.Component {
 	}
 
 	onTaskCardPress(task) {
-		const navigation = this.props.navigation;
-		navigation.navigate('Task Info', task);
+		this.props.navigation.navigate('Task Info', task);
 	}
 
 	buildInfoSection() {
@@ -72,8 +72,9 @@ export default class AssetInfo extends React.Component {
 
 		return (
 			<View style={styles.infoSection}>
-				<View style={styles.intoText}>
+				<View style={styles.infoText}>
 					<H1>{asset.name}</H1>
+					<Text>{asset.noun}</Text>
 					<Text>{asset.model}</Text>
 					<Text>Status: {asset.status}</Text>
 				</View>

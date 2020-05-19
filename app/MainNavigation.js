@@ -5,6 +5,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Assets from './MainScreens/Assets';
 import AssetInfo from './MainScreens/AssetInfo';
 import TaskInfo from './MainScreens/TaskInfo';
+import EditAsset from './EditScreens/EditAsset';
 
 const stack = createStackNavigator();
 
@@ -15,6 +16,7 @@ export default function MainNavigation() {
 				<stack.Screen name="Assets" component={Assets} />
 				<stack.Screen name="Asset Info" component={AssetInfo} />
 				<stack.Screen name="Task Info" component={TaskInfo} />
+				<stack.Screen name="Edit Asset" component={EditAsset} />
 			</stack.Navigator>
 		</NavigationContainer>
 	);

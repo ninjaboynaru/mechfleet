@@ -5,7 +5,7 @@ import { H1, H3, Icon } from 'native-base';
 const styles = StyleSheet.create({
 	assetCard: {
 		flexDirection: 'row',
-		margin: 12,
+		marginVertical: 12,
 		overflow: 'hidden',
 		borderWidth: 1,
 		borderRadius: 6,

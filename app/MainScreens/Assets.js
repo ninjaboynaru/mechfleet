@@ -1,5 +1,6 @@
 import React from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
+import { Container, Content, Button, Text } from 'native-base';
 import { ErrorDisplay, LoadingDisplay } from '../metaComponents';
 import AssetCard from '../ItemCards/AssetCard';
 import db from '../db/db';
@@ -19,6 +20,7 @@ export default class Assets extends React.Component {
 		super(props);
 		this.renderAssetCard = this.renderAssetCard.bind(this);
 		this.onAssetCardPress = this.onAssetCardPress.bind(this);
+		this.onAddAssetPress = this.onAddAssetPress.bind(this);
 		this.state = { assets: null, loading: true, loadingError: false };
 	}
 
@@ -33,10 +35,13 @@ export default class Assets extends React.Component {
 		);
 	}
 
-	// eslint-disable-next-line
 	onAssetCardPress(asset) {
 		const navigation = this.props.navigation;
 		navigation.navigate('Asset Info', asset);
+	}
+
+	onAddAssetPress() {
+		this.props.navigation.navigate('Edit Asset');
 	}
 
 	buildAssetList() {
@@ -70,9 +75,14 @@ export default class Assets extends React.Component {
 		}
 
 		return (
-			<View>
-				{this.buildAssetList()}
-			</View>
+			<Container>
+				<Content padder>
+					<Button success block onPress={this.onAddAssetPress}>
+						<Text>Add Asset</Text>
+					</Button>
+					{this.buildAssetList()}
+				</Content>
+			</Container>
 		);
 	}
 }
