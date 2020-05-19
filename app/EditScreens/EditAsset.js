@@ -1,21 +1,29 @@
 import React from 'react';
-import { Container, Content, Form, Item, Input, Picker, Label } from 'native-base';
+import { View } from 'react-native';
+import { Container, Content, Form, Item, Input, Picker, Label, Button, Text, Toast } from 'native-base';
+import { LoadingDisplay } from '../metaComponents';
 import assetStatusMap from '../assetStatusMap';
+import db from '../db/db';
 
-const EDIT_TYPE = { NEW: 1, EDIT: 2 };
+const controlsStyle = {
+	marginTop: 16,
+	flexDirection: 'row',
+	justifyContent: 'space-between'
+};
 
 export default class EditAsset extends React.Component {
 	constructor(props) {
 		super(props);
 		this.asset = this.props.route.params;
-		this.editType = this.asset ? EDIT_TYPE.EDIT : EDIT_TYPE.NEW;
 		this.onNameChange = this.onNameChange.bind(this);
 		this.onNounChange = this.onNounChange.bind(this);
 		this.onModelChange = this.onModelChange.bind(this);
 		this.onStatusChange = this.onStatusChange.bind(this);
-		this.state = { name: '', noun: '', model: '', status: 1 };
+		this.onSavePress = this.onSavePress.bind(this);
+		this.onCancelPress = this.onCancelPress.bind(this);
+		this.state = { name: '', noun: '', model: '', status: 1, loading: false };
 
-		if (this.editType === EDIT_TYPE.EDIT) {
+		if (this.asset) {
 			const asset = this.asset;
 			this.state = { name: asset.name, noun: asset.noun, model: asset.model, status: asset.status };
 		}
@@ -40,6 +48,46 @@ export default class EditAsset extends React.Component {
 		this.setState({ status: statusValue });
 	}
 
+	onSavePress() {
+		const state = this.state;
+		const newAsset = {
+			name: state.name,
+			noun: state.noun,
+			model: state.model,
+			status: state.status
+		};
+
+		if (this.asset) {
+			newAsset._id = this.asset._id;
+		}
+
+		this.setState({ loading: true });
+		db.saveAsset(newAsset).then(
+			() => {
+				Toast.show({
+					text: 'Asset Saved',
+					type: 'success',
+					duration: 4000
+				});
+
+				this.props.navigation.navigate('Assets');
+			},
+			() => {
+				Toast.show({
+					text: 'Save Error',
+					type: 'danger',
+					duration: 4000
+				});
+
+				this.setState({ loading: false });
+			}
+		);
+	}
+
+	onCancelPress() {
+		this.props.navigation.goBack();
+	}
+
 	buildStatusPicker() {
 		const pickerItems = [];
 
@@ -58,8 +106,11 @@ export default class EditAsset extends React.Component {
 	}
 
 	render() {
-		const { name, noun, model } = this.state;
+		if (this.state.loading === true) {
+			return <LoadingDisplay>Saving</LoadingDisplay>;
+		}
 
+		const { name, noun, model } = this.state;
 		return (
 			<Container>
 				<Content padder>
@@ -77,6 +128,10 @@ export default class EditAsset extends React.Component {
 							<Input value={model} onChangeText={this.onModelChange} />
 						</Item>
 						{this.buildStatusPicker()}
+						<View style={controlsStyle}>
+							<Button success onPress={this.onSavePress}><Text>Save</Text></Button>
+							<Button light onPress={this.onCancelPress}><Text>Cancel</Text></Button>
+						</View>
 					</Form>
 				</Content>
 			</Container>

@@ -18,6 +18,7 @@ function assetListKeyExtractor(asset, index) {
 export default class Assets extends React.Component {
 	constructor(props) {
 		super(props);
+		this.onFocus = this.onFocus.bind(this);
 		this.renderAssetCard = this.renderAssetCard.bind(this);
 		this.onAssetCardPress = this.onAssetCardPress.bind(this);
 		this.onAddAssetPress = this.onAddAssetPress.bind(this);
@@ -25,6 +26,11 @@ export default class Assets extends React.Component {
 	}
 
 	componentDidMount() {
+		this.props.navigation.addListener('focus', this.onFocus);
+	}
+
+	onFocus() {
+		this.setState({ loading: true });
 		db.getAssets().then(
 			(assets) => {
 				this.setState({ assets, loading: false });

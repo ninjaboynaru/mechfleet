@@ -49,4 +49,9 @@ export default new function() {
 	this.readPartsFile = function() {
 		return readFileJson(PARTS_FILE_PATH);
 	};
+
+	this.writeAssetsFile = function(assetsArray) {
+		const jsonString = JSON.stringify(assetsArray, null, 2);
+		return fs.unlink(ASSETS_FILE_PATH).then(() => fs.writeFile(ASSETS_FILE_PATH, jsonString));
+	};
 }();

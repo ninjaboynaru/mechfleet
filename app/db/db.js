@@ -1,4 +1,5 @@
 import jsonata from 'jsonata';
+import shortid from 'shortid';
 import fsInterface from './fsInterface';
 
 function addTaskCountToAssets(assets) {
@@ -11,6 +12,23 @@ function addTaskCountToAssets(assets) {
 
 		return assets;
 	});
+}
+
+function saveNewAsset(assets, newAsset) {
+	const _id = shortid.generate();
+	const asset = { _id, ...newAsset };
+
+	assets.push(asset);
+	return fsInterface.writeAssetsFile(assets);
+}
+
+function modifyAsset(assets, asset) {
+	const queryExpression = jsonata(`$#$i[_id='${asset._id}'][0].$i`);
+	const assetIndex = queryExpression.evaluate(assets);
+
+	assets[assetIndex] = asset;
+
+	return fsInterface.writeAssetsFile(assets);
 }
 
 export default new function db() {
@@ -45,6 +63,18 @@ export default new function db() {
 
 			const matchingParts = queryExpression.evaluate(parts);
 			return matchingParts;
+		});
+	};
+
+	this.saveAsset = function(asset) {
+		const isNewAsset = !asset._id;
+
+		return this.getAssets().then((assets) => {
+			if (isNewAsset === true) {
+				return saveNewAsset(assets, asset);
+			}
+
+			return modifyAsset(assets, asset);
 		});
 	};
 }();

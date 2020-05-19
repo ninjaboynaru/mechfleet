@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { StyleProvider, Spinner, H1 } from 'native-base';
+import { StyleProvider, Root, H1 } from 'native-base';
 import getTheme from './native-base-theme/components';
 import theme from './native-base-theme/variables/custom';
 import { ErrorDisplay, LoadingDisplay } from './app/metaComponents';
@@ -38,9 +38,11 @@ export default class App extends React.Component {
 			toRender = <MainNavigation/>
 		}
 		return (
-			<StyleProvider style={getTheme(theme)}>
-				{toRender}
-			</StyleProvider>
+			<Root>
+				<StyleProvider style={getTheme(theme)}>
+					{toRender}
+				</StyleProvider>
+			</Root>
 		);
 	}
 }
