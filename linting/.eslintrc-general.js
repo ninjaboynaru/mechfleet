@@ -16,6 +16,7 @@ module.exports = {
 		'no-use-before-define': 0,
 		'guard-for-in': 0,
 		'default-case': 0,
+		'class-methods-use-this': 0,
 		'no-useless-constructor': 0,
 		'semi': ['error', 'always', { 'omitLastInOneLineBlock': true }],
 		'object-curly-newline': ['error', {'consistent':true}],
