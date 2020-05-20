@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Container, Content, H1, Button, Text } from 'native-base';
 import PartCard from '../ItemCards/PartCard';
-import WithLoadable from '../WithLoadable';
+import WithDataMeta from '../metaComponents/WithDataMeta';
 import db from '../db/db';
 
 const styles = StyleSheet.create({
@@ -28,7 +28,7 @@ class TaskInfo extends React.Component {
 	constructor(props) {
 		super(props);
 		this.task = this.props.route.params;
-		this.loadable = this.props.loadable;
+		this.dataMeta = this.props.dataMeta;
 		this.onDeletePress = this.onDeletePress.bind(this);
 		this.onDeleteConfirm = this.onDeleteConfirm.bind(this);
 		this.onEditPress = this.onEditPress.bind(this);
@@ -39,21 +39,21 @@ class TaskInfo extends React.Component {
 	}
 
 	componentDidMount() {
-		this.loadable.showLoading('Loading Parts');
+		this.dataMeta.showLoading('Loading Parts');
 		db.getPartsById(this.task.associatedParts).then(
 			(parts) => {
-				this.loadable.hideLoading();
+				this.dataMeta.hideLoading();
 				this.setState({ parts });
 			},
 			() => {
-				this.loadable.hideLoading();
-				this.loadable.toastDanger('Error loading parts');
+				this.dataMeta.hideLoading();
+				this.dataMeta.toastDanger('Error loading parts');
 			}
 		);
 	}
 
 	onDeletePress() {
-		this.loadable.buttonOverlay(
+		this.dataMeta.buttonOverlay(
 			'Are you sure you want to delete this task',
 			'Delete',
 			'danger',
@@ -62,17 +62,17 @@ class TaskInfo extends React.Component {
 	}
 
 	onDeleteConfirm() {
-		this.loadable.closeButtonOverlay();
-		this.loadable.showLoading('Deleating');
+		this.dataMeta.closeButtonOverlay();
+		this.dataMeta.showLoading('Deleating');
 		db.deleteTask(this.task._id).then(
 			() => {
-				this.loadable.hideLoading();
-				this.loadable.toastSuccess('Task Deleated');
+				this.dataMeta.hideLoading();
+				this.dataMeta.toastSuccess('Task Deleated');
 				this.props.navigation.navigate('Assets');
 			},
 			() => {
-				this.loadable.hideLoading();
-				this.loadable.toastDanger('Error deleating task');
+				this.dataMeta.hideLoading();
+				this.dataMeta.toastDanger('Error deleating task');
 			}
 		);
 	}
@@ -148,7 +148,7 @@ class TaskInfo extends React.Component {
 	}
 
 	render() {
-		if (this.loadable.visibleDisplays.loading === true) {
+		if (this.dataMeta.visibleDisplays.loading === true) {
 			return null;
 		}
 
@@ -163,4 +163,4 @@ class TaskInfo extends React.Component {
 	}
 }
 
-export default WithLoadable(TaskInfo);
+export default WithDataMeta(TaskInfo);

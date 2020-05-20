@@ -2,10 +2,21 @@
 
 import React from 'react';
 import { Toast } from 'native-base';
-import { ButtonOverlay, LoadingDisplay } from './metaComponents';
+import LoadingDisplay from './LoadingDisplay';
+import ButtonOverlay from './ButtonOverlay';
 
-export default function WithLoadable(WrappedComponent) {
-	return class LoadableComponent extends React.Component {
+/**
+* Higher Order Component function - "With Data Essential Meta Components"
+* Adds LoadingDisplay, ButtonOverlay, and Toast functionanlity to components. allowing them to show
+* loadng screens, button overlays (modal), and toast messages without needing to manage
+* the state and callbacks for these.
+*
+* LoadingDisplay is frequently used in CRUD data operations
+* ButtonOverlay is frequently used in data operations for user confirmation
+* Toast is frequently used to show success or faliure messages of a data operation
+*/
+export default function WithDataMeta(WrappedComponent) {
+	return class DataMetaComponent extends React.Component {
 		constructor(props) {
 			super(props);
 
@@ -15,7 +26,7 @@ export default function WithLoadable(WrappedComponent) {
 			this.toastDanger = this.toastDanger.bind(this);
 			this.buttonOverlay = this.buttonOverlay.bind(this);
 			this.closeButtonOverlay = this.closeButtonOverlay.bind(this);
-			this.loadable = {
+			this.dataMeta = {
 				showLoading: this.showLoading,
 				hideLoading: this.hideLoading,
 				toastSuccess: this.toastSuccess,
@@ -32,12 +43,12 @@ export default function WithLoadable(WrappedComponent) {
 		}
 
 		showLoading(loadingText) {
-			this.loadable.visibleDisplays.loading = true;
+			this.dataMeta.visibleDisplays.loading = true;
 			this.setState({ loadingText });
 		}
 
 		hideLoading() {
-			this.loadable.visibleDisplays.loading = false;
+			this.dataMeta.visibleDisplays.loading = false;
 			this.setState({ loadingText: null });
 		}
 
@@ -62,12 +73,12 @@ export default function WithLoadable(WrappedComponent) {
 				onClosePress: this.closeButtonOverlay
 			};
 
-			this.loadable.visibleDisplays.buttonOverlay = true;
+			this.dataMeta.visibleDisplays.buttonOverlay = true;
 			this.setState({ buttonOverlayData });
 		}
 
 		closeButtonOverlay() {
-			this.loadable.visibleDisplays.buttonOverlay = false;
+			this.dataMeta.visibleDisplays.buttonOverlay = false;
 			this.setState({ buttonOverlayData: null });
 		}
 
@@ -92,7 +103,7 @@ export default function WithLoadable(WrappedComponent) {
 			return (
 				<>
 					{extraDisplay}
-					<WrappedComponent {...this.props} loadable={this.loadable} />
+					<WrappedComponent {...this.props} dataMeta={this.dataMeta} />
 				</>
 			);
 		}
