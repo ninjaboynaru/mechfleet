@@ -1,28 +1,18 @@
 import React from 'react';
-import { StyleSheet, FlatList } from 'react-native';
+import { View } from 'react-native';
 import { Container, Content, Button, Text } from 'native-base';
-import { ErrorDisplay, LoadingDisplay } from '../metaComponents';
+import WithDataMeta from '../metaComponents/WithDataMeta';
 import AssetCard from '../ItemCards/AssetCard';
 import db from '../db/db';
 
-const styles = StyleSheet.create({
-	assetListContainer: {
-
-	}
-});
-
-function assetListKeyExtractor(asset, index) {
-	return `${asset._id}_${index}`;
-}
-
-export default class Assets extends React.Component {
+class Assets extends React.Component {
 	constructor(props) {
 		super(props);
+		this.dataMeta = this.props.dataMeta;
 		this.onFocus = this.onFocus.bind(this);
-		this.renderAssetCard = this.renderAssetCard.bind(this);
 		this.onAssetCardPress = this.onAssetCardPress.bind(this);
 		this.onAddAssetPress = this.onAddAssetPress.bind(this);
-		this.state = { assets: null, loading: true, loadingError: false };
+		this.state = { assets: [] };
 	}
 
 	componentDidMount() {
@@ -30,21 +20,21 @@ export default class Assets extends React.Component {
 	}
 
 	onFocus() {
-		this.setState({ loading: true });
+		this.dataMeta.showLoading('Loading Assets');
 		db.getAssets().then(
 			(assets) => {
-				this.setState({ assets, loading: false });
+				this.dataMeta.hideLoading();
+				this.setState({ assets });
 			},
-			(err) => {
-				console.log('ERROR LOADING ASSETS: ', err);
-				this.setState({ loadingError: true });
+			() => {
+				this.dataMeta.hideLoading();
+				this.dataMeta.toastDanger('Error loading assets');
 			}
 		);
 	}
 
 	onAssetCardPress(asset) {
-		const navigation = this.props.navigation;
-		navigation.navigate('Asset Info', asset);
+		this.props.navigation.navigate('Asset Info', asset);
 	}
 
 	onAddAssetPress() {
@@ -52,33 +42,19 @@ export default class Assets extends React.Component {
 	}
 
 	buildAssetList() {
-		const assets = this.state.assets;
-		return (
-			<FlatList
-				style={styles.assetListContainer}
-				data={assets}
-				renderItem={this.renderAssetCard}
-				keyExtractor={assetListKeyExtractor}
-			/>
-		);
-	}
+		const assetCards = [];
 
-	renderAssetCard({ item }) {
-		const asset = item;
-		const onPress = () => {
-			this.onAssetCardPress(asset);
-		};
-		return <AssetCard asset={asset} onPress={onPress} />;
+		for (const asset of this.state.assets) {
+			const onPress = () => this.onAssetCardPress(asset);
+			assetCards.push(<AssetCard key={asset._id} asset={asset} onPress={onPress} />);
+		}
+
+		return assetCards;
 	}
 
 	render() {
-		const { loading, loadingError } = this.state;
-
-		if (loadingError === true) {
-			return <ErrorDisplay>Error Loading Assets</ErrorDisplay>;
-		}
-		if (loading === true) {
-			return <LoadingDisplay>Loading Assets</LoadingDisplay>;
+		if (this.dataMeta.visibleDisplays.loading === true) {
+			return null;
 		}
 
 		return (
@@ -93,3 +69,5 @@ export default class Assets extends React.Component {
 		);
 	}
 }
+
+export default WithDataMeta(Assets);
