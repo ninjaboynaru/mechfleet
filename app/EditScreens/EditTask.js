@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Container, Content, Form, Item, Input, Picker, Label, Button, Text, Textarea, Toast } from 'native-base';
-import { LoadingDisplay } from '../metaComponents';
+import { Container, Content, Form, Item, Input, Picker, Label, Button, Text, Textarea } from 'native-base';
+import WithDataMeta from '../metaComponents/WithDataMeta';
 import taskTypeData from '../taskTypeData';
 import db from '../db/db';
 
@@ -15,11 +15,12 @@ const textAreaStyle = {
 	width: '100%'
 };
 
-export default class EditTask extends React.Component {
+class EditTask extends React.Component {
 	constructor(props) {
 		super(props);
 		this.parentAssetId = this.props.route.params.parentAssetId;
 		this.task = this.props.route.params.task;
+		this.dataMeta = this.props.dataMeta;
 		this.onNameChange = this.onNameChange.bind(this);
 		this.onDescriptionChange = this.onDescriptionChange.bind(this);
 		this.onTypeChange = this.onTypeChange.bind(this);
@@ -34,8 +35,6 @@ export default class EditTask extends React.Component {
 			this.state = { name: '', description: '', type: 1 };
 			this.props.navigation.setOptions({ title: 'New Task' });
 		}
-
-		this.state.loading = false;
 	}
 
 	onNameChange(name) {
@@ -71,26 +70,16 @@ export default class EditTask extends React.Component {
 			newTask.createdOn = new Date().getTime();
 		}
 
-		this.setState({ loading: true });
+		const dataMeta = this.dataMeta;
+		dataMeta.showLoading('Saving Task');
 		db.saveTask(newTask).then(
 			() => {
-				Toast.show({
-					text: 'Task Saved',
-					type: 'success',
-					duration: 4000
-				});
-
+				dataMeta.toastSuccess('Task Saved');
 				this.props.navigation.navigate('Assets');
 			},
-			(err) => {
-				console.log('TASK SAVE ERROR: ', err);
-				Toast.show({
-					text: 'Save Error',
-					type: 'danger',
-					duration: 4000
-				});
-
-				this.setState({ loading: false });
+			() => {
+				dataMeta.hideLoading();
+				dataMeta.toastDanger('Error saving task');
 			}
 		);
 	}
@@ -117,8 +106,8 @@ export default class EditTask extends React.Component {
 	}
 
 	render() {
-		if (this.state.loading === true) {
-			return <LoadingDisplay>Saving</LoadingDisplay>;
+		if (this.dataMeta.visibleDisplays.loading === true) {
+			return null;
 		}
 
 		const { name, description } = this.state;
@@ -151,3 +140,5 @@ export default class EditTask extends React.Component {
 		);
 	}
 }
+
+export default WithDataMeta(EditTask);

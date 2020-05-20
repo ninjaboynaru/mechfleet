@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Container, Content, Form, Item, Input, Picker, Label, Button, Text, Toast } from 'native-base';
-import { LoadingDisplay } from '../metaComponents';
+import { Container, Content, Form, Item, Input, Picker, Label, Button, Text } from 'native-base';
+import WithDataMeta from '../metaComponents/WithDataMeta';
 import assetStatusData from '../assetStatusData';
 import db from '../db/db';
 
@@ -11,17 +11,18 @@ const controlsStyle = {
 	justifyContent: 'space-between'
 };
 
-export default class EditAsset extends React.Component {
+class EditAsset extends React.Component {
 	constructor(props) {
 		super(props);
 		this.asset = this.props.route.params;
+		this.dataMeta = this.props.dataMeta;
 		this.onNameChange = this.onNameChange.bind(this);
 		this.onNounChange = this.onNounChange.bind(this);
 		this.onModelChange = this.onModelChange.bind(this);
 		this.onStatusChange = this.onStatusChange.bind(this);
 		this.onSavePress = this.onSavePress.bind(this);
 		this.onCancelPress = this.onCancelPress.bind(this);
-		this.state = { name: '', noun: '', model: '', status: 1, loading: false };
+		this.state = { name: '', noun: '', model: '', status: 1 };
 
 		if (this.asset) {
 			const asset = this.asset;
@@ -61,25 +62,17 @@ export default class EditAsset extends React.Component {
 			newAsset._id = this.asset._id;
 		}
 
-		this.setState({ loading: true });
+		const dataMeta = this.dataMeta;
+		dataMeta.showLoading('Saving Asset');
+
 		db.saveAsset(newAsset).then(
 			() => {
-				Toast.show({
-					text: 'Asset Saved',
-					type: 'success',
-					duration: 4000
-				});
-
+				dataMeta.toastSuccess('Asset Saved');
 				this.props.navigation.navigate('Assets');
 			},
 			() => {
-				Toast.show({
-					text: 'Save Error',
-					type: 'danger',
-					duration: 4000
-				});
-
-				this.setState({ loading: false });
+				dataMeta.hideLoading();
+				dataMeta.toastDanger('Error saving asset');
 			}
 		);
 	}
@@ -106,8 +99,8 @@ export default class EditAsset extends React.Component {
 	}
 
 	render() {
-		if (this.state.loading === true) {
-			return <LoadingDisplay>Saving</LoadingDisplay>;
+		if (this.dataMeta.visibleDisplays.loading === true) {
+			return null;
 		}
 
 		const { name, noun, model } = this.state;
@@ -138,3 +131,5 @@ export default class EditAsset extends React.Component {
 		);
 	}
 }
+
+export default WithDataMeta(EditAsset);
