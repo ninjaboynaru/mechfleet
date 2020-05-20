@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Container, Content, H1, Button, Text, Toast } from 'native-base';
-import { ErrorDisplay, LoadingDisplay, ButtonOverlay } from '../metaComponents';
+import { Container, Content, H1, Button, Text } from 'native-base';
 import TaskCard from '../ItemCards/TaskCard';
+import WithDataMeta from '../metaComponents/WithDataMeta';
 import assetStatusData from '../assetStatusData';
 import db from '../db/db';
 
@@ -25,61 +25,61 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default class AssetInfo extends React.Component {
+class AssetInfo extends React.Component {
 	constructor(props) {
 		super(props);
 		this.asset = this.props.route.params;
+		this.dataMeta = this.props.dataMeta;
 		this.onDeletePress = this.onDeletePress.bind(this);
 		this.onDeleteConfirm = this.onDeleteConfirm.bind(this);
-		this.onCancelDelete = this.onCancelDelete.bind(this);
 		this.onEditPress = this.onEditPress.bind(this);
 		this.onTaskArchivePress = this.onTaskArchivePress.bind(this);
 		this.onAddTaskPress = this.onAddTaskPress.bind(this);
 		this.onTaskCardPress = this.onTaskCardPress.bind(this);
-		this.state = { tasks: null, loadingTasks: true, loadingDelete: false, loadingError: false, showDeleteConfirmation: false };
+		this.state = { tasks: [] };
 	}
 
 	componentDidMount() {
+		const dataMeta = this.dataMeta;
+		dataMeta.showLoading('Loading Tasks');
+
 		db.getAssetTasks(this.asset._id).then(
 			(tasks) => {
-				this.setState({ tasks, loadingTasks: false });
+				dataMeta.hideLoading();
+				this.setState({ tasks });
 			},
 			() => {
-				this.setState({ loadingError: true });
+				dataMeta.hideLoading();
+				dataMeta.toastDanger('Error loading tasks');
 			}
 		);
 	}
 
 	onDeletePress() {
-		this.setState({ showDeleteConfirmation: true });
-	}
-
-	onDeleteConfirm() {
-		this.setState({ showDeleteConfirmation: false, loadingDelete: true });
-		db.deleteAsset(this.asset._id).then(
-			() => {
-				Toast.show({
-					text: 'Asset Deleted',
-					type: 'success',
-					duration: 4000
-				});
-
-				this.props.navigation.navigate('Assets');
-			},
-			() => {
-				Toast.show({
-					text: 'Delete Error',
-					type: 'danger',
-					duration: 4000
-				});
-
-				this.setState({ loadingDelete: false });
-			}
+		this.dataMeta.buttonOverlay(
+			'Are you sure you want to delete this asset',
+			'Delete',
+			'danger',
+			this.onDeleteConfirm
 		);
 	}
 
-	onCancelDelete() {
-		this.setState({ showDeleteConfirmation: false });
+	onDeleteConfirm() {
+		const dataMeta = this.dataMeta;
+		dataMeta.closeButtonOverlay();
+		dataMeta.showLoading('Deleating Asset');
+
+		db.deleteAsset(this.asset._id).then(
+			() => {
+				dataMeta.hideLoading();
+				dataMeta.toastSuccess('Asset Deleated');
+				this.props.navigation.navigate('Assets');
+			},
+			() => {
+				dataMeta.hideLoading();
+				dataMeta.toastDanger('Error deleating asset');
+			}
+		);
 	}
 
 	onEditPress() {
@@ -100,7 +100,7 @@ export default class AssetInfo extends React.Component {
 
 	buildInfoSection() {
 		const asset = this.asset;
-		const assetText = assetStatusData.getStatusData(asset.status).displayName;
+		const statusText = assetStatusData.getStatusData(asset.status).displayName;
 
 		return (
 			<View style={styles.infoSection}>
@@ -108,7 +108,7 @@ export default class AssetInfo extends React.Component {
 					<H1>{asset.name}</H1>
 					<Text>{asset.noun}</Text>
 					<Text>{asset.model}</Text>
-					<Text>Status: {assetText}</Text>
+					<Text>Status: {statusText}</Text>
 				</View>
 				<View style={styles.intoControls}>
 					<Button rounded block danger style={styles.infoControls__item} onPress={this.onDeletePress}>
@@ -130,7 +130,7 @@ export default class AssetInfo extends React.Component {
 		const taskCards = [];
 
 		for (const task of tasks) {
-			const onPress = () => { this.onTaskCardPress(task) };
+			const onPress = () => this.onTaskCardPress(task);
 			const taskCard = <TaskCard task={task} onPress={onPress} key={task._id} />;
 			taskCards.push(taskCard);
 		}
@@ -145,36 +145,10 @@ export default class AssetInfo extends React.Component {
 		);
 	}
 
-	buildDeleteConfirmation() {
-		return (
-			<ButtonOverlay
-				titleText="Are you sure you want to delete this asset. This can not be undone"
-				buttonText="DELETE"
-				buttonType="danger"
-				onButtonPress={this.onDeleteConfirm}
-				onClosePress={this.onCancelDelete}
-			/>
-		);
-	}
-
 	render() {
-		const { loadingTasks, loadingDelete, loadingError, showDeleteConfirmation } = this.state;
-
-		if (loadingError === true) {
-			return <ErrorDisplay>Error Loading Assets</ErrorDisplay>;
+		if (this.dataMeta.visibleDisplays.loading === true) {
+			return null;
 		}
-		if (loadingTasks === true) {
-			return <LoadingDisplay>Loading Tasks</LoadingDisplay>;
-		}
-		if (loadingDelete === true) {
-			return <LoadingDisplay>Deleting Asset</LoadingDisplay>;
-		}
-
-		let deleteConfirmation = null;
-		if (showDeleteConfirmation === true) {
-			deleteConfirmation = this.buildDeleteConfirmation();
-		}
-
 
 		return (
 			<Container>
@@ -182,8 +156,9 @@ export default class AssetInfo extends React.Component {
 					{this.buildInfoSection()}
 					{this.buildTaskList()}
 				</Content>
-				{deleteConfirmation}
 			</Container>
 		);
 	}
 }
+
+export default WithDataMeta(AssetInfo);

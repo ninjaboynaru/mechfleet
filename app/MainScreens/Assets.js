@@ -1,5 +1,4 @@
 import React from 'react';
-import { View } from 'react-native';
 import { Container, Content, Button, Text } from 'native-base';
 import WithDataMeta from '../metaComponents/WithDataMeta';
 import AssetCard from '../ItemCards/AssetCard';
