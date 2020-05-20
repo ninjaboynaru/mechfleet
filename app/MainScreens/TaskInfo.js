@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Container, Content, H1, Button, Text, Toast } from 'native-base';
-import { ErrorDisplay, LoadingDisplay, ButtonOverlay } from '../metaComponents';
+import { Container, Content, H1, Button, Text } from 'native-base';
 import PartCard from '../ItemCards/PartCard';
+import WithLoadable from '../WithLoadable';
 import db from '../db/db';
 
 const styles = StyleSheet.create({
@@ -24,61 +24,57 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default class TaskInfo extends React.Component {
+class TaskInfo extends React.Component {
 	constructor(props) {
 		super(props);
 		this.task = this.props.route.params;
+		this.loadable = this.props.loadable;
 		this.onDeletePress = this.onDeletePress.bind(this);
 		this.onDeleteConfirm = this.onDeleteConfirm.bind(this);
-		this.onCancelDelete = this.onCancelDelete.bind(this);
 		this.onEditPress = this.onEditPress.bind(this);
 		this.onCompletePress = this.onCompletePress.bind(this);
 		this.onAddPartPress = this.onAddPartPress.bind(this);
 		this.onDeletePartPress = this.onDeletePartPress.bind(this);
-		this.state = { parts: null, loadingParts: true, loadingDelete: false, loadingError: false, showDeleteConfirmation: false };
+		this.state = { parts: [] };
 	}
 
 	componentDidMount() {
+		this.loadable.showLoading('Loading Parts');
 		db.getPartsById(this.task.associatedParts).then(
 			(parts) => {
-				this.setState({ parts, loadingParts: false });
+				this.loadable.hideLoading();
+				this.setState({ parts });
 			},
 			() => {
-				this.setState({ loadingError: true });
+				this.loadable.hideLoading();
+				this.loadable.toastDanger('Error loading parts');
 			}
 		);
 	}
 
 	onDeletePress() {
-		this.setState({ showDeleteConfirmation: true });
-	}
-
-	onDeleteConfirm() {
-		this.setState({ showDeleteConfirmation: false, loadingDelete: true });
-		db.deleteTask(this.task._id).then(
-			() => {
-				Toast.show({
-					text: 'Task Deleted',
-					type: 'success',
-					duration: 4000
-				});
-
-				this.props.navigation.navigate('Assets');
-			},
-			() => {
-				Toast.show({
-					text: 'Delete Error',
-					type: 'danger',
-					duration: 4000
-				});
-
-				this.setState({ loadingDelete: false });
-			}
+		this.loadable.buttonOverlay(
+			'Are you sure you want to delete this task',
+			'Delete',
+			'danger',
+			this.onDeleteConfirm
 		);
 	}
 
-	onCancelDelete() {
-		this.setState({ showDeleteConfirmation: false });
+	onDeleteConfirm() {
+		this.loadable.closeButtonOverlay();
+		this.loadable.showLoading('Deleating');
+		db.deleteTask(this.task._id).then(
+			() => {
+				this.loadable.hideLoading();
+				this.loadable.toastSuccess('Task Deleated');
+				this.props.navigation.navigate('Assets');
+			},
+			() => {
+				this.loadable.hideLoading();
+				this.loadable.toastDanger('Error deleating task');
+			}
+		);
 	}
 
 	onEditPress() {
@@ -131,18 +127,6 @@ export default class TaskInfo extends React.Component {
 		);
 	}
 
-	buildDeleteConfirmation() {
-		return (
-			<ButtonOverlay
-				titleText="Are you sure you want to delete this task. This can not be undone"
-				buttonText="DELETE"
-				buttonType="danger"
-				onButtonPress={this.onDeleteConfirm}
-				onClosePress={this.onCancelDelete}
-			/>
-		);
-	}
-
 	buildPartList() {
 		const parts = this.state.parts;
 		const partCards = [];
@@ -164,21 +148,8 @@ export default class TaskInfo extends React.Component {
 	}
 
 	render() {
-		const { loadingParts, loadingDelete, loadingError, showDeleteConfirmation } = this.state;
-
-		if (loadingError === true) {
-			return <ErrorDisplay>Error Loading Parts</ErrorDisplay>;
-		}
-		if (loadingParts === true) {
-			return <LoadingDisplay>Loading Parts</LoadingDisplay>;
-		}
-		if (loadingDelete === true) {
-			return <LoadingDisplay>Deleting Task</LoadingDisplay>;
-		}
-
-		let deleteConfirmation = null;
-		if (showDeleteConfirmation === true) {
-			deleteConfirmation = this.buildDeleteConfirmation();
+		if (this.loadable.visibleDisplays.loading === true) {
+			return null;
 		}
 
 		return (
@@ -187,8 +158,9 @@ export default class TaskInfo extends React.Component {
 					{this.buildInfoSection()}
 					{this.buildPartList()}
 				</Content>
-				{deleteConfirmation}
 			</Container>
 		);
 	}
 }
+
+export default WithLoadable(TaskInfo);
