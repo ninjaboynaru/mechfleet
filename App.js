@@ -1,11 +1,16 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { YellowBox, StyleSheet, View } from 'react-native';
 import { StyleProvider, Root, H1 } from 'native-base';
 import getTheme from './native-base-theme/components';
 import theme from './native-base-theme/variables/custom';
 import { ErrorDisplay, LoadingDisplay } from './app/metaComponents';
 import MainNavigation from './app/MainNavigation';
 import db from './app/db/db';
+
+YellowBox.ignoreWarnings([
+	'VirtualizedLists should never be nested',
+	'Animated: `useNativeDriver` was not specified. This is a required'
+])
 
 export default class App extends React.Component {
 	constructor(props) {
