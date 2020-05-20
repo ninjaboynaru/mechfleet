@@ -11,9 +11,13 @@ import EditTask from './EditScreens/EditTask';
 const stack = createStackNavigator();
 
 export default function MainNavigation() {
+	const screenOptions = {
+		headerTitleAlign: 'center'
+	};
+
 	return (
-		<NavigationContainer initialRouteName="Assets" headerMode="none">
-			<stack.Navigator>
+		<NavigationContainer>
+			<stack.Navigator initialRouteName="Assets" screenOptions={screenOptions}>
 				<stack.Screen name="Assets" component={Assets} />
 				<stack.Screen name="Asset Info" component={AssetInfo} />
 				<stack.Screen name="Task Info" component={TaskInfo} />
