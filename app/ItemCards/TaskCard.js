@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { H1, H3 } from 'native-base';
+import { H1, H3, Text } from 'native-base';
+import taskTypeData from '../taskTypeData';
 
 const styles = StyleSheet.create({
 	taskCard: {
@@ -17,11 +18,10 @@ const styles = StyleSheet.create({
 		marginVertical: 6
 	},
 	typeBlock: {
-		flexBasis: '20%',
-		backgroundColor: 'green',
 		color: 'white',
 		justifyContent: 'center',
-		alignItems: 'center'
+		alignItems: 'center',
+		padding: 12
 	},
 	typeText: {
 		color: 'white'
@@ -31,6 +31,10 @@ const styles = StyleSheet.create({
 export default function TaskCard({ task, onPress }) {
 	const date = new Date(task.createdOn);
 	const dateString = date.toDateString();
+	const typeData = taskTypeData.getTypeData(task.type);
+	const typeName = typeData.displayName;
+	const typeBlockColorStyle = { backgroundColor: typeData.color };
+
 	return (
 		<TouchableOpacity onPress={onPress}>
 			<View style={styles.taskCard}>
@@ -38,8 +42,8 @@ export default function TaskCard({ task, onPress }) {
 					<H1>{task.name}</H1>
 					<H3>{dateString}</H3>
 				</View>
-				<View style={styles.typeBlock}>
-					<H3 style={styles.typeText}>{task.type}</H3>
+				<View style={[styles.typeBlock, typeBlockColorStyle]}>
+					<Text style={styles.typeText}>{typeName}</Text>
 				</View>
 			</View>
 		</TouchableOpacity>
