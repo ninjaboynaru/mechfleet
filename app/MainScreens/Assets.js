@@ -35,7 +35,8 @@ export default class Assets extends React.Component {
 			(assets) => {
 				this.setState({ assets, loading: false });
 			},
-			() => {
+			(err) => {
+				console.log('ERROR LOADING ASSETS: ', err);
 				this.setState({ loadingError: true });
 			}
 		);

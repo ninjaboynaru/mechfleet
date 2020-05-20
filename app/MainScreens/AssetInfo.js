@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Container, Content, H1, Button, Text } from 'native-base';
-import { ErrorDisplay, LoadingDisplay } from '../metaComponents';
+import { Container, Content, H1, Button, Text, Toast } from 'native-base';
+import { ErrorDisplay, LoadingDisplay, ButtonOverlay } from '../metaComponents';
 import TaskCard from '../ItemCards/TaskCard';
 import assetStatusData from '../assetStatusData';
 import db from '../db/db';
@@ -30,17 +30,19 @@ export default class AssetInfo extends React.Component {
 		super(props);
 		this.asset = this.props.route.params;
 		this.onDeletePress = this.onDeletePress.bind(this);
+		this.onDeleteConfirm = this.onDeleteConfirm.bind(this);
+		this.onCancelDelete = this.onCancelDelete.bind(this);
 		this.onEditPress = this.onEditPress.bind(this);
 		this.onTaskArchivePress = this.onTaskArchivePress.bind(this);
 		this.onAddTaskPress = this.onAddTaskPress.bind(this);
 		this.onTaskCardPress = this.onTaskCardPress.bind(this);
-		this.state = { tasks: null, loading: true, loadingError: false };
+		this.state = { tasks: null, loadingTasks: true, loadingDelete: false, loadingError: false, showDeleteConfirmation: false };
 	}
 
 	componentDidMount() {
 		db.getAssetTasks(this.asset._id).then(
 			(tasks) => {
-				this.setState({ tasks, loading: false });
+				this.setState({ tasks, loadingTasks: false });
 			},
 			() => {
 				this.setState({ loadingError: true });
@@ -49,7 +51,35 @@ export default class AssetInfo extends React.Component {
 	}
 
 	onDeletePress() {
+		this.setState({ showDeleteConfirmation: true });
+	}
 
+	onDeleteConfirm() {
+		this.setState({ showDeleteConfirmation: false, loadingDelete: true });
+		db.deleteAsset(this.asset._id).then(
+			() => {
+				Toast.show({
+					text: 'Asset Deleted',
+					type: 'success',
+					duration: 4000
+				});
+
+				this.props.navigation.navigate('Assets');
+			},
+			() => {
+				Toast.show({
+					text: 'Delete Error',
+					type: 'danger',
+					duration: 4000
+				});
+
+				this.setState({ loadingDelete: false });
+			}
+		);
+	}
+
+	onCancelDelete() {
+		this.setState({ showDeleteConfirmation: false });
 	}
 
 	onEditPress() {
@@ -115,15 +145,36 @@ export default class AssetInfo extends React.Component {
 		);
 	}
 
+	buildDeleteConfirmation() {
+		return (
+			<ButtonOverlay
+				titleText="Are you sure you want to delete this asset. This can not be undone"
+				buttonText="DELETE"
+				buttonType="danger"
+				onButtonPress={this.onDeleteConfirm}
+				onClosePress={this.onCancelDelete}
+			/>
+		);
+	}
+
 	render() {
-		const { loading, loadingError } = this.state;
+		const { loadingTasks, loadingDelete, loadingError, showDeleteConfirmation } = this.state;
 
 		if (loadingError === true) {
 			return <ErrorDisplay>Error Loading Assets</ErrorDisplay>;
 		}
-		if (loading === true) {
+		if (loadingTasks === true) {
 			return <LoadingDisplay>Loading Tasks</LoadingDisplay>;
 		}
+		if (loadingDelete === true) {
+			return <LoadingDisplay>Deleting Asset</LoadingDisplay>;
+		}
+
+		let deleteConfirmation = null;
+		if (showDeleteConfirmation === true) {
+			deleteConfirmation = this.buildDeleteConfirmation();
+		}
+
 
 		return (
 			<Container>
@@ -131,6 +182,7 @@ export default class AssetInfo extends React.Component {
 					{this.buildInfoSection()}
 					{this.buildTaskList()}
 				</Content>
+				{deleteConfirmation}
 			</Container>
 		);
 	}

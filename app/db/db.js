@@ -2,6 +2,11 @@ import jsonata from 'jsonata';
 import shortid from 'shortid';
 import fsInterface from './fsInterface';
 
+function getAssetArrayIndex(assets, assetIdToFind) {
+	const queryExpression = jsonata(`$#$i[_id='${assetIdToFind}'][0].$i`);
+	return queryExpression.evaluate(assets);
+}
+
 function addTaskCountToAssets(assets) {
 	return fsInterface.readTasksFile().then((tasks) => {
 		for (const asset of assets) {
@@ -23,9 +28,7 @@ function saveNewAsset(assets, newAsset) {
 }
 
 function modifyAsset(assets, asset) {
-	const queryExpression = jsonata(`$#$i[_id='${asset._id}'][0].$i`);
-	const assetIndex = queryExpression.evaluate(assets);
-
+	const assetIndex = getAssetArrayIndex(assets, asset._id);
 	assets[assetIndex] = asset;
 
 	return fsInterface.writeAssetsFile(assets);
@@ -75,6 +78,15 @@ export default new function db() {
 			}
 
 			return modifyAsset(assets, asset);
+		});
+	};
+
+	this.deleteAsset = function(assetId) {
+		return this.getAssets().then((assets) => {
+			const assetIndex = getAssetArrayIndex(assets, assetId);
+			assets.splice(assetIndex, 1);
+
+			return fsInterface.writeAssetsFile(assets);
 		});
 	};
 }();

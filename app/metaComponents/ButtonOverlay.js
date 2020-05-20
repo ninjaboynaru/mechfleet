@@ -6,7 +6,7 @@ import { Button, Text, H2 } from 'native-base';
 
 const styles = StyleSheet.create({
 	overlay: {
-		zIndex: 10,
+		zIndex: 10000,
 		position: 'absolute',
 		width: '100%',
 		height: '100%',
@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
 	overlayContent: {
 		justifyContent: 'center',
 		alignItems: 'center',
+		maxWidth: '90%',
 		padding: 32,
 		borderRadius: 12,
 		backgroundColor: 'white'
