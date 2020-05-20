@@ -1,6 +1,6 @@
 [{
 		"_id": "T1",
-		"title": "Task 1",
+		"name": "Task 1",
 		"description": "Task 1 Desc",
 		"type": 1,
 		"createdOn": 1589745098460,
@@ -10,7 +10,7 @@
 	},
 	{
 		"_id": "T2",
-		"title": "Task 2",
+		"name": "Task 2",
 		"description": "Task 2 Desc",
 		"type": 1,
 		"createdOn": 1589745098460,
@@ -20,7 +20,7 @@
 	},
 	{
 		"_id": "T3",
-		"title": "Task 3",
+		"name": "Task 3",
 		"description": "Task 3 Desc",
 		"type": 1,
 		"createdOn": 1589745098460,
@@ -30,7 +30,7 @@
 	},
 	{
 		"_id": "T4",
-		"title": "Task 4",
+		"name": "Task 4",
 		"description": "Task 4 Desc",
 		"type": 1,
 		"createdOn": 1589745098460,

@@ -2,9 +2,9 @@ import jsonata from 'jsonata';
 import shortid from 'shortid';
 import fsInterface from './fsInterface';
 
-function getAssetArrayIndex(assets, assetIdToFind) {
-	const queryExpression = jsonata(`$#$i[_id='${assetIdToFind}'][0].$i`);
-	return queryExpression.evaluate(assets);
+function getDataArrayIndex(dataArray, dataIdToFind) {
+	const queryExpression = jsonata(`$#$i[_id='${dataIdToFind}'][0].$i`);
+	return queryExpression.evaluate(dataArray);
 }
 
 function addTaskCountToAssets(assets) {
@@ -28,10 +28,25 @@ function saveNewAsset(assets, newAsset) {
 }
 
 function modifyAsset(assets, asset) {
-	const assetIndex = getAssetArrayIndex(assets, asset._id);
+	const assetIndex = getDataArrayIndex(assets, asset._id);
 	assets[assetIndex] = asset;
 
 	return fsInterface.writeAssetsFile(assets);
+}
+
+function saveNewTask(tasks, newTask) {
+	const _id = shortid.generate();
+	const task = { _id, ...newTask };
+
+	tasks.push(task);
+	return fsInterface.writeTasksFile(tasks);
+}
+
+function modifyTask(tasks, task) {
+	const taskIndex = getDataArrayIndex(tasks, task._id);
+	tasks[taskIndex] = task;
+
+	return fsInterface.writeTasksFile(tasks);
 }
 
 export default new function db() {
@@ -81,12 +96,33 @@ export default new function db() {
 		});
 	};
 
+	this.saveTask = function(task) {
+		const isNewTask = !task._id;
+
+		return this.getTasks().then((tasks) => {
+			if (isNewTask === true) {
+				return saveNewTask(tasks, task);
+			}
+
+			return modifyTask(tasks, task);
+		});
+	};
+
 	this.deleteAsset = function(assetId) {
 		return this.getAssets().then((assets) => {
-			const assetIndex = getAssetArrayIndex(assets, assetId);
+			const assetIndex = getDataArrayIndex(assets, assetId);
 			assets.splice(assetIndex, 1);
 
 			return fsInterface.writeAssetsFile(assets);
+		});
+	};
+
+	this.deleteTask = function(taskId) {
+		return this.getTasks().then((tasks) => {
+			const taskIndex = getDataArrayIndex(tasks, taskId);
+			tasks.splice(taskIndex, 1);
+
+			return fsInterface.writeTasksFile(tasks);
 		});
 	};
 }();

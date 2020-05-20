@@ -6,6 +6,7 @@ import Assets from './MainScreens/Assets';
 import AssetInfo from './MainScreens/AssetInfo';
 import TaskInfo from './MainScreens/TaskInfo';
 import EditAsset from './EditScreens/EditAsset';
+import EditTask from './EditScreens/EditTask';
 
 const stack = createStackNavigator();
 
@@ -17,6 +18,7 @@ export default function MainNavigation() {
 				<stack.Screen name="Asset Info" component={AssetInfo} />
 				<stack.Screen name="Task Info" component={TaskInfo} />
 				<stack.Screen name="Edit Asset" component={EditAsset} />
+				<stack.Screen name="Edit Task" component={EditTask} />
 			</stack.Navigator>
 		</NavigationContainer>
 	);

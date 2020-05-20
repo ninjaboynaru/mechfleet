@@ -52,7 +52,7 @@ export default class TaskInfo extends React.Component {
 	}
 
 	onEditPress() {
-
+		this.props.navigation.navigate('Edit Task', { task: this.task });
 	}
 
 	onCompletePress() {
@@ -82,7 +82,7 @@ export default class TaskInfo extends React.Component {
 		return (
 			<View style={styles.infoSection}>
 				<View style={styles.infoText}>
-					<H1>{task.title}</H1>
+					<H1>{task.name}</H1>
 					<Text>{task.type}</Text>
 					<Text>{dateString}</Text>
 				</View>

@@ -35,7 +35,7 @@ export default function TaskCard({ task, onPress }) {
 		<TouchableOpacity onPress={onPress}>
 			<View style={styles.taskCard}>
 				<View style={styles.infoBlock}>
-					<H1>{task.title}</H1>
+					<H1>{task.name}</H1>
 					<H3>{dateString}</H3>
 				</View>
 				<View style={styles.typeBlock}>

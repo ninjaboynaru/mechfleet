@@ -91,7 +91,7 @@ export default class AssetInfo extends React.Component {
 	}
 
 	onAddTaskPress() {
-
+		this.props.navigation.navigate('Edit Task', { parentAssetId: this.asset._id });
 	}
 
 	onTaskCardPress(task) {

@@ -33,6 +33,11 @@ function readFileJson(filePath) {
 	return fs.readFile(filePath).then((fileContents) => JSON.parse(fileContents));
 }
 
+function writeFileJson(filePath, object) {
+	const jsonString = JSON.stringify(object, null, 2);
+	return fs.unlink(filePath).then(() => fs.writeFile(filePath, jsonString));
+}
+
 export default new function() {
 	this.ensureFileIntegrity = function() {
 		return ensureDataDirectory().then(ensureAssetsFile).then(ensureTasksFile).then(ensurePartsFile);
@@ -51,7 +56,10 @@ export default new function() {
 	};
 
 	this.writeAssetsFile = function(assetsArray) {
-		const jsonString = JSON.stringify(assetsArray, null, 2);
-		return fs.unlink(ASSETS_FILE_PATH).then(() => fs.writeFile(ASSETS_FILE_PATH, jsonString));
+		return writeFileJson(ASSETS_FILE_PATH, assetsArray);
+	};
+
+	this.writeTasksFile = function(tasksArray) {
+		return writeFileJson(TASKS_FILE_PATH, tasksArray);
 	};
 }();
