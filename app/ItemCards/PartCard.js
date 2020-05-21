@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { H1, Text, Button } from 'native-base';
 
 const styles = StyleSheet.create({
@@ -14,19 +14,33 @@ const styles = StyleSheet.create({
 	}
 });
 
-export default function PartCard({ part, onDeletePress }) {
-	return (
-		<View style={styles.partCard}>
-			<View>
-				<H1>{part.name}</H1>
-				<Text>{part.noun}</Text>
-				<Text>{`NSN: ${part.NSN}`}</Text>
-			</View>
+export default function PartCard({ part, onPress, onDeletePress }) {
+	let deleteButton = null;
+
+	if (onDeletePress) {
+		deleteButton = (
 			<View>
 				<Button danger small block onPress={onDeletePress}>
 					<Text>Delete</Text>
 				</Button>
 			</View>
-		</View>
+		);
+	}
+
+	if (!onPress) {
+		onPress = () => {};
+	}
+
+	return (
+		<TouchableOpacity onPress={onPress}>
+			<View style={styles.partCard}>
+				<View>
+					<H1>{part.name}</H1>
+					<Text>{part.noun}</Text>
+					<Text>{`NSN: ${part.NSN}`}</Text>
+				</View>
+				{deleteButton}
+			</View>
+		</TouchableOpacity>
 	);
 }

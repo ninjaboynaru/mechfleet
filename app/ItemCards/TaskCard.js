@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { H1, H3, Text } from 'native-base';
+import { H3, Text } from 'native-base';
 import taskTypeData from '../taskTypeData';
 
 const styles = StyleSheet.create({
