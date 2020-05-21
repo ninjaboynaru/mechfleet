@@ -59,7 +59,7 @@ class Assets extends React.Component {
 		return (
 			<Container>
 				<Content padder>
-					<Button success block onPress={this.onAddAssetPress}>
+					<Button block onPress={this.onAddAssetPress}>
 						<Text>Add Asset</Text>
 					</Button>
 					{this.buildAssetList()}

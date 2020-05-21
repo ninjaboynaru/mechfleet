@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { Container, Content, H1, Button, Text } from 'native-base';
 import PartCard from '../ItemCards/PartCard';
 import WithDataMeta from '../metaComponents/WithDataMeta';
+import taskTypeData from '../taskTypeData';
 import db from '../db/db';
 
 const styles = StyleSheet.create({
@@ -10,7 +11,7 @@ const styles = StyleSheet.create({
 		flexDirection: 'row',
 		justifyContent: 'space-between',
 		alignItems: 'flex-start',
-		marginBottom: 12
+		marginBottom: 32
 	},
 	infoText: {
 	},
@@ -105,22 +106,24 @@ class TaskInfo extends React.Component {
 			completeButtonText = 'UN-COMPLETE';
 		}
 
+		const typeText = taskTypeData.getTypeData(task.type).displayName;
+
 		return (
 			<View style={styles.infoSection}>
 				<View style={styles.infoText}>
 					<H1>{task.name}</H1>
-					<Text>{task.type}</Text>
-					<Text>{dateString}</Text>
+					<Text>Type: {typeText}</Text>
+					<Text>Crated On: {dateString}</Text>
 				</View>
 				<View style={styles.infoControls}>
-					<Button rounded block danger style={styles.infoControls__item} onPress={this.onDeletePress}>
-						<Text>DELETE</Text>
-					</Button>
-					<Button primary rounded block style={styles.infoControls__item} onPress={this.onEditPress}>
+					<Button small block style={styles.infoControls__item} onPress={this.onEditPress}>
 						<Text>EDIT</Text>
 					</Button>
-					<Button info rounded block style={styles.infoControls__item} onPress={this.onCompletePress}>
+					<Button small block style={styles.infoControls__item} onPress={this.onCompletePress}>
 						<Text>{completeButtonText}</Text>
+					</Button>
+					<Button small block danger style={styles.infoControls__item} onPress={this.onDeletePress}>
+						<Text>DELETE</Text>
 					</Button>
 				</View>
 			</View>
@@ -139,7 +142,7 @@ class TaskInfo extends React.Component {
 
 		return (
 			<View style={styles.partsList}>
-				<Button success block onPress={this.onAddPartPress}>
+				<Button small block onPress={this.onAddPartPress}>
 					<Text>Add Part</Text>
 				</Button>
 				{partCards}

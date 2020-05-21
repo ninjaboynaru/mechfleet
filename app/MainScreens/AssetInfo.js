@@ -10,10 +10,13 @@ const styles = StyleSheet.create({
 	infoSection: {
 		flexDirection: 'row',
 		justifyContent: 'space-between',
-		marginBottom: 12
+		marginBottom: 32
 	},
 	infoText: {
 		flex: 1
+	},
+	infoTextItem: {
+		marginVertical: 6
 	},
 	infoControls: {
 	},
@@ -21,7 +24,6 @@ const styles = StyleSheet.create({
 		marginVertical: 5
 	},
 	taskList: {
-
 	}
 });
 
@@ -106,19 +108,19 @@ class AssetInfo extends React.Component {
 			<View style={styles.infoSection}>
 				<View style={styles.infoText}>
 					<H1>{asset.name}</H1>
-					<Text>{asset.noun}</Text>
-					<Text>{asset.model}</Text>
-					<Text>Status: {statusText}</Text>
+					<Text style={styles.infoTextItem}>{asset.noun}</Text>
+					<Text style={styles.infoTextItem}>Model: {asset.model}</Text>
+					<Text style={styles.infoTextItem}>Status: {statusText}</Text>
 				</View>
-				<View style={styles.intoControls}>
-					<Button rounded block danger style={styles.infoControls__item} onPress={this.onDeletePress}>
-						<Text>DELETE</Text>
-					</Button>
-					<Button primary rounded block style={styles.infoControls__item} onPress={this.onEditPress}>
+				<View style={styles.infoControls}>
+					<Button small block style={styles.infoControls__item} onPress={this.onEditPress}>
 						<Text>EDIT</Text>
 					</Button>
-					<Button light rounded block style={styles.infoControls__item} onPress={this.onTaskArchivePress}>
+					<Button small block light style={styles.infoControls__item} onPress={this.onTaskArchivePress}>
 						<Text>TASK ARCHIVE</Text>
+					</Button>
+					<Button small block danger style={styles.infoControls__item} onPress={this.onDeletePress}>
+						<Text>DELETE</Text>
 					</Button>
 				</View>
 			</View>
@@ -137,7 +139,7 @@ class AssetInfo extends React.Component {
 
 		return (
 			<View style={styles.taskList}>
-				<Button success block onPress={this.onAddTaskPress}>
+				<Button small block onPress={this.onAddTaskPress}>
 					<Text>Add Task</Text>
 				</Button>
 				{taskCards}

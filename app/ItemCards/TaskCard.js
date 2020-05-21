@@ -18,13 +18,14 @@ const styles = StyleSheet.create({
 		marginVertical: 6
 	},
 	typeBlock: {
-		color: 'white',
+		width: '40%',
 		justifyContent: 'center',
 		alignItems: 'center',
 		padding: 12
 	},
 	typeText: {
-		color: 'white'
+		color: 'white',
+		fontWeight: 'bold'
 	}
 });
 
@@ -39,8 +40,8 @@ export default function TaskCard({ task, onPress }) {
 		<TouchableOpacity onPress={onPress}>
 			<View style={styles.taskCard}>
 				<View style={styles.infoBlock}>
-					<H1>{task.name}</H1>
-					<H3>{dateString}</H3>
+					<H3>{task.name}</H3>
+					<Text>{dateString}</Text>
 				</View>
 				<View style={[styles.typeBlock, typeBlockColorStyle]}>
 					<Text style={styles.typeText}>{typeName}</Text>
