@@ -2,6 +2,7 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import Home from './Home';
 import Assets from './MainScreens/Assets';
 import AssetInfo from './MainScreens/AssetInfo';
 import TaskInfo from './MainScreens/TaskInfo';
@@ -17,7 +18,8 @@ export default function MainNavigation() {
 
 	return (
 		<NavigationContainer>
-			<stack.Navigator initialRouteName="Assets" screenOptions={screenOptions}>
+			<stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
+				<stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
 				<stack.Screen name="Assets" component={Assets} />
 				<stack.Screen name="Asset Info" component={AssetInfo} />
 				<stack.Screen name="Task Info" component={TaskInfo} />
