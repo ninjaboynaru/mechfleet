@@ -49,6 +49,21 @@ function modifyTask(tasks, task) {
 	return fsInterface.writeTasksFile(tasks);
 }
 
+function saveNewPart(parts, newPart) {
+	const _id = shortid.generate();
+	const part = { _id, ...newPart };
+
+	parts.push(part);
+	return fsInterface.writePartsFile(parts);
+}
+
+function modifyPart(parts, part) {
+	const partIndex = getDataArrayIndex(parts, part._id);
+	parts[partIndex] = part;
+
+	return fsInterface.writePartsFile(parts);
+}
+
 export default new function db() {
 	this.init = function() {
 		return fsInterface.ensureFileIntegrity();
@@ -108,6 +123,18 @@ export default new function db() {
 		});
 	};
 
+	this.savePart = function(part) {
+		const isNewPart = !part._id;
+
+		return this.getParts().then((parts) => {
+			if (isNewPart === true) {
+				return saveNewPart(parts, part);
+			}
+
+			return modifyPart(parts, part);
+		});
+	};
+
 	this.deleteAsset = function(assetId) {
 		return this.getAssets().then((assets) => {
 			const assetIndex = getDataArrayIndex(assets, assetId);
@@ -123,6 +150,15 @@ export default new function db() {
 			tasks.splice(taskIndex, 1);
 
 			return fsInterface.writeTasksFile(tasks);
+		});
+	};
+
+	this.deletePart = function(partId) {
+		return this.getParts().then((parts) => {
+			const partIndex = getDataArrayIndex(parts, partId);
+			parts.splice(partIndex, 1);
+
+			return fsInterface.writePartsFile(parts);
 		});
 	};
 }();

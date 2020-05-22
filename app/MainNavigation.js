@@ -7,8 +7,10 @@ import Assets from './MainScreens/Assets';
 import Parts from './MainScreens/Parts';
 import AssetInfo from './MainScreens/AssetInfo';
 import TaskInfo from './MainScreens/TaskInfo';
+import PartInfo from './MainScreens/PartInfo';
 import EditAsset from './EditScreens/EditAsset';
 import EditTask from './EditScreens/EditTask';
+import EditPart from './EditScreens/EditPart';
 
 const stack = createStackNavigator();
 
@@ -25,8 +27,10 @@ export default function MainNavigation() {
 				<stack.Screen name="Parts" component={Parts} />
 				<stack.Screen name="Asset Info" component={AssetInfo} />
 				<stack.Screen name="Task Info" component={TaskInfo} />
+				<stack.Screen name="Part Info" component={PartInfo} />
 				<stack.Screen name="Edit Asset" component={EditAsset} />
 				<stack.Screen name="Edit Task" component={EditTask} />
+				<stack.Screen name="Edit Part" component={EditPart} />
 			</stack.Navigator>
 		</NavigationContainer>
 	);

@@ -7,14 +7,18 @@ import db from '../db/db';
 class Parts extends React.Component {
 	constructor(props) {
 		super(props);
-		this.dataMeta = this.props.dataMeta;
+		this.onFocus = this.onFocus.bind(this);
 		this.onAddPartPress = this.onAddPartPress.bind(this);
 		this.onPartPress = this.onPartPress.bind(this);
 		this.state = { parts: [] };
 	}
 
 	componentDidMount() {
-		const dataMeta = this.dataMeta;
+		this.props.navigation.addListener('focus', this.onFocus);
+	}
+
+	onFocus() {
+		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Loading Parts');
 
 		db.getParts().then(
@@ -30,7 +34,7 @@ class Parts extends React.Component {
 	}
 
 	onAddPartPress() {
-
+		this.props.navigation.navigate('Edit Part');
 	}
 
 	onPartPress(part) {
@@ -50,7 +54,7 @@ class Parts extends React.Component {
 	}
 
 	render() {
-		if (this.dataMeta.visibleDisplays.loading === true) {
+		if (this.props.dataMeta.visibleDisplays.loading === true) {
 			return null;
 		}
 

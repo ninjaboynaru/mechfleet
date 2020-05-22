@@ -62,4 +62,8 @@ export default new function() {
 	this.writeTasksFile = function(tasksArray) {
 		return writeFileJson(TASKS_FILE_PATH, tasksArray);
 	};
+
+	this.writePartsFile = function(partsArray) {
+		return writeFileJson(PARTS_FILE_PATH, partsArray);
+	};
 }();
