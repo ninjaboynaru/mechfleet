@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Container, Content, H1, Button, Text } from 'native-base';
+import PartsBrowser from '../PartsBrowser';
 import PartCard from '../ItemCards/PartCard';
 import WithDataMeta from '../metaComponents/WithDataMeta';
 import taskTypeData from '../taskTypeData';
@@ -34,12 +35,17 @@ class TaskInfo extends React.Component {
 		this.onDeleteConfirm = this.onDeleteConfirm.bind(this);
 		this.onEditPress = this.onEditPress.bind(this);
 		this.onCompletePress = this.onCompletePress.bind(this);
-		this.onAddPartPress = this.onAddPartPress.bind(this);
+		this.togglePartsBrowser = this.togglePartsBrowser.bind(this);
 		this.onDeletePartPress = this.onDeletePartPress.bind(this);
-		this.state = { parts: [] };
+		this.addPart = this.addPart.bind(this);
+		this.state = { parts: [], showPartsBrowser: false };
 	}
 
 	componentDidMount() {
+		this.loadParts();
+	}
+
+	loadParts() {
 		this.dataMeta.showLoading('Loading Parts');
 		db.getPartsById(this.task.associatedParts).then(
 			(parts) => {
@@ -86,14 +92,31 @@ class TaskInfo extends React.Component {
 
 	}
 
-	onAddPartPress() {
-
-	}
-
 	onDeletePartPress() {
 
 	}
 
+	togglePartsBrowser() {
+		this.setState({ showPartsBrowser: !this.state.showPartsBrowser });
+	}
+
+	addPart(part) {
+		const dataMeta = this.dataMeta;
+		dataMeta.showLoading('Adding Part');
+
+		db.addPartToTask(this.task, part._id).then(
+			() => {
+				dataMeta.hideLoading();
+				dataMeta.toastSuccess('Part Added');
+				this.setState({ showPartsBrowser: false });
+				this.loadParts();
+			},
+			() => {
+				dataMeta.hideLoading();
+				dataMeta.toastDanger('Error adding part');
+			}
+		);
+	}
 
 	buildInfoSection() {
 		const task = this.task;
@@ -142,11 +165,28 @@ class TaskInfo extends React.Component {
 
 		return (
 			<View style={styles.partsList}>
-				<Button small block onPress={this.onAddPartPress}>
-					<Text>Add Part</Text>
-				</Button>
 				{partCards}
 			</View>
+		);
+	}
+
+	buildAddPartButton() {
+		let addPartText;
+		let addPartButtonType;
+
+		if (this.state.showPartsBrowser === true) {
+			addPartText = 'Cancel';
+			addPartButtonType = { light: true };
+		}
+		else {
+			addPartText = 'Add Part';
+			addPartButtonType = { primary: true };
+		}
+
+		return (
+			<Button padder small block {...addPartButtonType} onPress={this.togglePartsBrowser}>
+				<Text>{addPartText}</Text>
+			</Button>
 		);
 	}
 
@@ -155,11 +195,21 @@ class TaskInfo extends React.Component {
 			return null;
 		}
 
+		let bottomComponent;
+
+		if (this.state.showPartsBrowser === true) {
+			bottomComponent = <PartsBrowser onPartPress={this.addPart} />;
+		}
+		else {
+			bottomComponent = this.buildPartList();
+		}
+
 		return (
 			<Container>
 				<Content padder>
 					{this.buildInfoSection()}
-					{this.buildPartList()}
+					{this.buildAddPartButton()}
+					{bottomComponent}
 				</Content>
 			</Container>
 		);

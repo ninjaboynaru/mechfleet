@@ -99,6 +99,11 @@ export default new function db() {
 		});
 	};
 
+	this.addPartToTask = function(task, partId) {
+		task.associatedParts.push(partId);
+		return this.saveTask(task);
+	};
+
 	this.saveAsset = function(asset) {
 		const isNewAsset = !asset._id;
 
