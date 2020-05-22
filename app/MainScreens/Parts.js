@@ -1,16 +1,37 @@
 import React from 'react';
-import { Container, Content, Button, Text } from 'native-base';
+import { StyleSheet, View } from 'react-native';
+import { Container, Content, Input, Button, Text } from 'native-base';
+import Fuse from 'fuse.js';
 import PartCard from '../ItemCards/PartCard';
 import WithDataMeta from '../metaComponents/WithDataMeta';
 import db from '../db/db';
 
+const styles = StyleSheet.create({
+	controls: {
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	searchInput: {
+		borderBottomWidth: 1,
+		borderColor: 'rgba(0,0,0,0.2)',
+		marginRight: 12
+	}
+});
+
+const fuseSearchOptions = {
+	includeScore: false,
+	keys: ['name', 'noun', 'NSN']
+};
+
 class Parts extends React.Component {
 	constructor(props) {
 		super(props);
+		this.fuseSearcher = null;
 		this.onFocus = this.onFocus.bind(this);
+		this.onSearchTermChange = this.onSearchTermChange.bind(this);
 		this.onAddPartPress = this.onAddPartPress.bind(this);
 		this.onPartPress = this.onPartPress.bind(this);
-		this.state = { parts: [] };
+		this.state = { parts: [], matchedParts: [], searchTerm: '' };
 	}
 
 	componentDidMount() {
@@ -24,13 +45,32 @@ class Parts extends React.Component {
 		db.getParts().then(
 			(parts) => {
 				dataMeta.hideLoading();
-				this.setState({ parts });
+				this.fuseSearcher = new Fuse(parts, fuseSearchOptions);
+				this.setState({ parts, matchedParts: parts });
 			},
 			() => {
 				dataMeta.hideLoading();
 				dataMeta.toastDanger('Error loading parts');
 			}
 		);
+	}
+
+	onSearchTermChange(searchTerm) {
+		this.setState({ searchTerm });
+
+		if (!searchTerm) {
+			this.setState({ matchedParts: this.state.parts });
+			return;
+		}
+
+		const searchResults = this.fuseSearcher.search(searchTerm);
+		const matchedParts = [];
+
+		for (const result of searchResults) {
+			matchedParts.push(result.item);
+		}
+
+		this.setState({ matchedParts });
 	}
 
 	onAddPartPress() {
@@ -42,10 +82,9 @@ class Parts extends React.Component {
 	}
 
 	buildPartsList() {
-		const parts = this.state.parts;
 		const partCards = [];
 
-		for (const part of parts) {
+		for (const part of this.state.matchedParts) {
 			const onPress = () => this.onPartPress(part);
 			partCards.push(<PartCard key={part._id} part={part} onPress={onPress} />);
 		}
@@ -61,7 +100,15 @@ class Parts extends React.Component {
 		return (
 			<Container>
 				<Content padder>
-					<Button block onPress={this.onAddPartPress}><Text>Add Part</Text></Button>
+					<View style={styles.controls}>
+						<Input
+							placeholder="Search Parts"
+							style={styles.searchInput}
+							value={this.state.searchTerm}
+							onChangeText={this.onSearchTermChange}
+						/>
+						<Button onPress={this.onAddPartPress}><Text>Add Part</Text></Button>
+					</View>
 					{this.buildPartsList()}
 				</Content>
 			</Container>
