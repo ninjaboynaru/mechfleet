@@ -112,6 +112,11 @@ export default new function db() {
 		return this.saveTask(task);
 	};
 
+	this.toggleTaskComplete = function(task) {
+		task.complete = !task.completel;
+		return this.saveTask(task);
+	};
+
 	this.saveAsset = function(asset) {
 		const isNewAsset = !asset._id;
 

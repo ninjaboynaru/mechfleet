@@ -89,7 +89,19 @@ class TaskInfo extends React.Component {
 	}
 
 	onCompletePress() {
+		const dataMeta = this.dataMeta;
+		dataMeta.showLoading('Changing Task Status');
 
+		db.toggleTaskComplete(this.task).then(
+			() => {
+				dataMeta.hideLoading();
+				dataMeta.toastSuccess('Task status changed');
+			},
+			() => {
+				dataMeta.hideLoading();
+				dataMeta.toastDanger('Error changing task status');
+			}
+		);
 	}
 
 	onDeletePartPress(partId) {
