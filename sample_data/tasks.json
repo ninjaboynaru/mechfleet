@@ -4,7 +4,7 @@
 		"description": "Task 1 Desc",
 		"type": 1,
 		"createdOn": 1589745098460,
-		"compleate": false,
+		"complete": false,
 		"parentAsset": "A1",
 		"associatedParts": ["P1", "P2"]
 	},
@@ -14,7 +14,7 @@
 		"description": "Task 2 Desc",
 		"type": 1,
 		"createdOn": 1589745098460,
-		"compleate": false,
+		"complete": false,
 		"parentAsset": "A1",
 		"associatedParts": ["P2"]
 	},
@@ -24,7 +24,7 @@
 		"description": "Task 3 Desc",
 		"type": 1,
 		"createdOn": 1589745098460,
-		"compleate": false,
+		"complete": false,
 		"parentAsset": "A3",
 		"associatedParts": []
 	},
@@ -34,7 +34,7 @@
 		"description": "Task 4 Desc",
 		"type": 1,
 		"createdOn": 1589745098460,
-		"compleate": false,
+		"complete": false,
 		"parentAsset": "A4",
 		"associatedParts": []
 	}
