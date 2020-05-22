@@ -81,9 +81,9 @@ export default new function db() {
 		return fsInterface.readPartsFile();
 	};
 
-	this.getAssetTasks = function(assetId) {
+	this.getAssetTasks = function(assetId, complete = false) {
 		return this.getTasks().then((tasks) => {
-			const queryExpression = jsonata(`[$[parentAsset='${assetId}']]`);
+			const queryExpression = jsonata(`[$[parentAsset='${assetId}' and complete=${complete}]]`);
 			const matchingTasks = queryExpression.evaluate(tasks);
 			return matchingTasks;
 		});
@@ -113,7 +113,7 @@ export default new function db() {
 	};
 
 	this.toggleTaskComplete = function(task) {
-		task.complete = !task.completel;
+		task.complete = !task.complete;
 		return this.saveTask(task);
 	};
 

@@ -1,6 +1,7 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
-import { Container, Content, H1, Button, Text } from 'native-base';
+import { Container, Content, H1, H3, Button, Text } from 'native-base';
 import TaskCard from '../ItemCards/TaskCard';
 import WithDataMeta from '../metaComponents/WithDataMeta';
 import assetStatusData from '../assetStatusData';
@@ -31,21 +32,29 @@ class AssetInfo extends React.Component {
 	constructor(props) {
 		super(props);
 		this.asset = this.props.route.params;
-		this.dataMeta = this.props.dataMeta;
+		this.onFocus = this.onFocus.bind(this);
 		this.onDeletePress = this.onDeletePress.bind(this);
 		this.onDeleteConfirm = this.onDeleteConfirm.bind(this);
 		this.onEditPress = this.onEditPress.bind(this);
 		this.onTaskArchivePress = this.onTaskArchivePress.bind(this);
 		this.onAddTaskPress = this.onAddTaskPress.bind(this);
 		this.onTaskCardPress = this.onTaskCardPress.bind(this);
-		this.state = { tasks: [] };
+		this.state = { tasks: [], showCompletedTasks: false };
 	}
 
 	componentDidMount() {
-		const dataMeta = this.dataMeta;
+		this.props.navigation.addListener('focus', this.onFocus);
+	}
+
+	onFocus() {
+		this.loadTasks();
+	}
+
+	loadTasks() {
+		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Loading Tasks');
 
-		db.getAssetTasks(this.asset._id).then(
+		db.getAssetTasks(this.asset._id, this.state.showCompletedTasks).then(
 			(tasks) => {
 				dataMeta.hideLoading();
 				this.setState({ tasks });
@@ -58,7 +67,7 @@ class AssetInfo extends React.Component {
 	}
 
 	onDeletePress() {
-		this.dataMeta.buttonOverlay(
+		this.props.dataMeta.buttonOverlay(
 			'Are you sure you want to delete this asset',
 			'Delete',
 			'danger',
@@ -67,7 +76,7 @@ class AssetInfo extends React.Component {
 	}
 
 	onDeleteConfirm() {
-		const dataMeta = this.dataMeta;
+		const dataMeta = this.props.dataMeta;
 		dataMeta.closeButtonOverlay();
 		dataMeta.showLoading('Deleating Asset');
 
@@ -89,7 +98,7 @@ class AssetInfo extends React.Component {
 	}
 
 	onTaskArchivePress() {
-
+		this.setState({ showCompletedTasks: !this.state.showCompletedTasks }, () => this.loadTasks());
 	}
 
 	onAddTaskPress() {
@@ -103,6 +112,14 @@ class AssetInfo extends React.Component {
 	buildInfoSection() {
 		const asset = this.asset;
 		const statusText = assetStatusData.getStatusData(asset.status).displayName;
+		let archiveText;
+
+		if (this.state.showCompletedTasks === true) {
+			archiveText = 'ACTIVE TASKS';
+		}
+		else {
+			archiveText = 'TASK ARCHIVE';
+		}
 
 		return (
 			<View style={styles.infoSection}>
@@ -117,7 +134,7 @@ class AssetInfo extends React.Component {
 						<Text>EDIT</Text>
 					</Button>
 					<Button small block light style={styles.infoControls__item} onPress={this.onTaskArchivePress}>
-						<Text>TASK ARCHIVE</Text>
+						<Text>{archiveText}</Text>
 					</Button>
 					<Button small block danger style={styles.infoControls__item} onPress={this.onDeletePress}>
 						<Text>DELETE</Text>
@@ -137,18 +154,29 @@ class AssetInfo extends React.Component {
 			taskCards.push(taskCard);
 		}
 
-		return (
-			<View style={styles.taskList}>
+		let aboveListComponent = null;
+
+		if (this.state.showCompletedTasks === false) {
+			aboveListComponent = (
 				<Button small block onPress={this.onAddTaskPress}>
 					<Text>Add Task</Text>
 				</Button>
+			);
+		}
+		else {
+			aboveListComponent = <H3 style={{ textAlign: 'center' }}>Showing Completed Tasks</H3>;
+		}
+
+		return (
+			<View style={styles.taskList}>
+				{aboveListComponent}
 				{taskCards}
 			</View>
 		);
 	}
 
 	render() {
-		if (this.dataMeta.visibleDisplays.loading === true) {
+		if (this.props.dataMeta.visibleDisplays.loading === true) {
 			return null;
 		}
 
@@ -162,5 +190,11 @@ class AssetInfo extends React.Component {
 		);
 	}
 }
+
+AssetInfo.propTypes = {
+	route: PropTypes.object.isRequired,
+	navigation: PropTypes.object.isRequired,
+	dataMeta: PropTypes.object.isRequired
+};
 
 export default WithDataMeta(AssetInfo);

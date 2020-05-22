@@ -1,7 +1,7 @@
 import React from 'react';
 import { Container, Content, Button, Text } from 'native-base';
-import WithDataMeta from '../metaComponents/WithDataMeta';
 import AssetCard from '../ItemCards/AssetCard';
+import WithDataMeta from '../metaComponents/WithDataMeta';
 import db from '../db/db';
 
 class Assets extends React.Component {
