@@ -198,7 +198,7 @@ class TaskInfo extends React.Component {
 		let bottomComponent;
 
 		if (this.state.showPartsBrowser === true) {
-			bottomComponent = <PartsBrowser onPartPress={this.addPart} />;
+			bottomComponent = <PartsBrowser onPartPress={this.addPart} ignorePartIds={this.task.associatedParts} />;
 		}
 		else {
 			bottomComponent = this.buildPartList();

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 import { Input } from 'native-base';
 import Fuse from 'fuse.js';
@@ -75,6 +76,9 @@ class PartsBrowser extends React.Component {
 		const partCards = [];
 
 		for (const part of this.state.matchedParts) {
+			if (this.props.ignorePartIds.includes(part._id)) {
+				continue;
+			}
 			const onPress = () => this.onPartPress(part);
 			partCards.push(<PartCard key={part._id} part={part} onPress={onPress} />);
 		}
@@ -102,5 +106,15 @@ class PartsBrowser extends React.Component {
 		);
 	}
 }
+
+PartsBrowser.propTypes = {
+	dataMeta: PropTypes.object.isRequired,
+	onPartPress: PropTypes.func.isRequired,
+	ignorePartIds: PropTypes.array
+};
+
+PartsBrowser.defaultProps = {
+	ignorePartIds: []
+};
 
 export default WithDataMeta(PartsBrowser);

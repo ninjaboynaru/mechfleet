@@ -9,6 +9,7 @@ module.exports = {
 		'react/jsx-one-expression-per-line': 0,
 		'react/sort-comp': 0,
 		'react/jsx-props-no-spreading': 0,
+		'react/forbid-prop-types': 0,
 		'react/jsx-indent': ['error', 'tab'],
 		'react/jsx-indent-props': ['error', 'tab']
 	}
