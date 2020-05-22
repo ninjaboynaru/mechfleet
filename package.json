@@ -16,6 +16,7 @@
 		"fuse.js": "^6.0.0",
 		"jsonata": "^1.8.3",
 		"native-base": "^2.13.12",
+		"prop-types": "^15.7.2",
 		"react": "16.11.0",
 		"react-native": "0.62.2",
 		"react-native-fs": "^2.16.6",
