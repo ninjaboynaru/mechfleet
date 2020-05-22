@@ -92,8 +92,20 @@ class TaskInfo extends React.Component {
 
 	}
 
-	onDeletePartPress() {
-
+	onDeletePartPress(partId) {
+		const dataMeta = this.dataMeta;
+		dataMeta.showLoading('Deleating Part');
+		db.removePartFromTask(this.task, partId).then(
+			() => {
+				dataMeta.hideLoading();
+				dataMeta.toastSuccess('Part Deleated');
+				this.loadParts();
+			},
+			() => {
+				dataMeta.hideLoading();
+				dataMeta.toastDanger('Error deleating parts');
+			}
+		);
 	}
 
 	togglePartsBrowser() {
@@ -158,7 +170,7 @@ class TaskInfo extends React.Component {
 		const partCards = [];
 
 		for (const part of parts) {
-			const onDeletePress = () => { this.onDeletePartPress(part) };
+			const onDeletePress = () => { this.onDeletePartPress(part._id) };
 			const partCard = <PartCard part={part} onDeletePress={onDeletePress} key={part._id} />;
 			partCards.push(partCard);
 		}

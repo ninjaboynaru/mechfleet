@@ -104,6 +104,14 @@ export default new function db() {
 		return this.saveTask(task);
 	};
 
+	this.removePartFromTask = function(task, partId) {
+		const queryExpression = jsonata(`$#$i[$='${partId}'][0].$i`);
+		const partIndex = queryExpression.evaluate(task.associatedParts);
+		task.associatedParts.splice(partIndex, 1);
+
+		return this.saveTask(task);
+	};
+
 	this.saveAsset = function(asset) {
 		const isNewAsset = !asset._id;
 
