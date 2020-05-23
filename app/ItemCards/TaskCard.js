@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import { H3, Text } from 'native-base';
-import taskTypeData from '../taskTypeData';
+import taskTypeData from '../subDataTypes/taskTypeData';
 
 const styles = StyleSheet.create({
 	taskCard: {

@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Container, Content, Form, Item, Input, Picker, Label, Button, Text, Textarea } from 'native-base';
 import WithDataMeta from '../metaComponents/WithDataMeta';
-import taskTypeData from '../taskTypeData';
+import taskTypeData from '../subDataTypes/taskTypeData';
 import db from '../db/db';
 
 const controlsStyle = {

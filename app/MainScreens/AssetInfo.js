@@ -4,7 +4,7 @@ import { StyleSheet, View } from 'react-native';
 import { Container, Content, H1, H3, Button, Text } from 'native-base';
 import TaskCard from '../ItemCards/TaskCard';
 import WithDataMeta from '../metaComponents/WithDataMeta';
-import assetStatusData from '../assetStatusData';
+import assetStatusData from '../subDataTypes/assetStatusData';
 import db from '../db/db';
 
 const styles = StyleSheet.create({

@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, TouchableOpacity, View, Text } from 'react-native';
 import { H1, H3, Icon } from 'native-base';
-import assetStatusData from '../assetStatusData';
+import assetStatusData from '../subDataTypes/assetStatusData';
 
 const styles = StyleSheet.create({
 	assetCard: {

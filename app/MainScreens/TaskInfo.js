@@ -4,7 +4,7 @@ import { Container, Content, H1, Button, Text } from 'native-base';
 import PartsBrowser from '../PartsBrowser';
 import PartCard from '../ItemCards/PartCard';
 import WithDataMeta from '../metaComponents/WithDataMeta';
-import taskTypeData from '../taskTypeData';
+import taskTypeData from '../subDataTypes/taskTypeData';
 import db from '../db/db';
 
 const styles = StyleSheet.create({

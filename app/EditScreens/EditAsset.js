@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Container, Content, Form, Item, Input, Picker, Label, Button, Text } from 'native-base';
 import WithDataMeta from '../metaComponents/WithDataMeta';
-import assetStatusData from '../assetStatusData';
+import assetStatusData from '../subDataTypes/assetStatusData';
 import db from '../db/db';
 
 const controlsStyle = {
