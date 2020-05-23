@@ -4,27 +4,31 @@
       "name" : "Mech 1",
       "model" : "V1",
       "noun" : "Mechanized Human Utility Apparatus",
-      "status" : 1
+      "status" : 1,
+			"faultTags": []
    },
    {
       "_id" : "A2",
       "name" : "Mech 2",
       "model" : "V1",
       "noun" : "Mechanized Human Utility Apparatus",
-      "status" : 1
+      "status" : 1,
+			"faultTags": []
    },
    {
       "_id" : "A3",
       "name" : "Mech 3",
       "model" : "V2",
       "noun" : "Mechanized Human Utility Apparatus",
-      "status" : 2
+      "status" : 2,
+			"faultTags": [1, 2 ,3]
    },
 	 {
 			"_id" : "A4",
 			"name" : "Mech 4",
 			"model" : "V2",
 			"noun" : "Mechanized Human Utility Apparatus",
-			"status" : 2
+			"status" : 2,
+			"faultTags": [4]
 	 }
 ]

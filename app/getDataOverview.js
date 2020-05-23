@@ -5,11 +5,13 @@ function buildAssetsOverview(assets, assetsOverviewObj) {
 		assetsOverviewObj.total += 1;
 
 		if (asset.status === 1) {
+			assetsOverviewObj.online += 1;
+
 			if (asset.taskCount > 0) {
 				assetsOverviewObj.onlineWithTasks += 1;
 			}
-			else {
-				assetsOverviewObj.online += 1;
+			if (asset.faultTags.length > 0) {
+				assetsOverviewObj.onlineWithFaults += 1;
 			}
 		}
 		else if (asset.status === 2) {
@@ -50,6 +52,7 @@ export default function getDataOverview() {
 			online: 0,
 			offline: 0,
 			onlineWithTasks: 0,
+			onlineWithFaults: 0,
 			total: 0
 		},
 		tasks: {

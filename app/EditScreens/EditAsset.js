@@ -1,15 +1,33 @@
 import React from 'react';
-import { View } from 'react-native';
-import { Container, Content, Form, Item, Input, Picker, Label, Button, Text } from 'native-base';
+import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { Container, Content, Form, Item, Input, Picker, Label, Button, CheckBox, Text } from 'native-base';
+import FaultTag from '../FaultTag';
 import WithDataMeta from '../metaComponents/WithDataMeta';
+import faultTagData from '../subDataTypes/faultTagData';
 import assetStatusData from '../subDataTypes/assetStatusData';
 import db from '../db/db';
 
-const controlsStyle = {
-	marginTop: 16,
-	flexDirection: 'row',
-	justifyContent: 'space-between'
-};
+const styles = StyleSheet.create({
+	controlsStyle: {
+		marginTop: 16,
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	faultTagBoxes: {
+		marginTop: 24,
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		alignItems: 'center'
+	},
+	faultTagItem: {
+		width: '50%',
+		flexDirection: 'row',
+		marginBottom: 12
+	},
+	faultTagCheckBox: {
+		marginRight: 32
+	}
+});
 
 class EditAsset extends React.Component {
 	constructor(props) {
@@ -20,13 +38,14 @@ class EditAsset extends React.Component {
 		this.onNounChange = this.onNounChange.bind(this);
 		this.onModelChange = this.onModelChange.bind(this);
 		this.onStatusChange = this.onStatusChange.bind(this);
+		this.onFaultTagsChange = this.onFaultTagsChange.bind(this);
 		this.onSavePress = this.onSavePress.bind(this);
 		this.onCancelPress = this.onCancelPress.bind(this);
-		this.state = { name: '', noun: '', model: '', status: 1 };
+		this.state = { name: '', noun: '', model: '', status: 1, faultTags: [] };
 
 		if (this.asset) {
 			const asset = this.asset;
-			this.state = { name: asset.name, noun: asset.noun, model: asset.model, status: asset.status };
+			this.state = { name: asset.name, noun: asset.noun, model: asset.model, status: asset.status, faultTags: asset.faultTags };
 		}
 		else {
 			this.props.navigation.setOptions({ title: 'New Asset' });
@@ -49,13 +68,28 @@ class EditAsset extends React.Component {
 		this.setState({ status: statusValue });
 	}
 
+	onFaultTagsChange(tagValue, removeTag) {
+		const newFaultTags = [...this.state.faultTags];
+
+		if (removeTag === true) {
+			const indexToRemove = this.state.faultTags.indexOf(tagValue);
+			newFaultTags.splice(indexToRemove, 1);
+		}
+		else {
+			newFaultTags.push(tagValue);
+		}
+
+		this.setState({ faultTags: newFaultTags });
+	}
+
 	onSavePress() {
 		const state = this.state;
 		const newAsset = {
 			name: state.name,
 			noun: state.noun,
 			model: state.model,
-			status: state.status
+			status: state.status,
+			faultTags: state.faultTags
 		};
 
 		if (this.asset) {
@@ -98,6 +132,34 @@ class EditAsset extends React.Component {
 		);
 	}
 
+	buildFaultTagCheckBoxes() {
+		const checkBoxes = [];
+
+		for (const tagData of faultTagData.tagMap) {
+			if (tagData.value === -1) {
+				continue;
+			}
+
+			const checked = this.state.faultTags.includes(tagData.value);
+			const onPress = () => this.onFaultTagsChange(tagData.value, checked);
+
+			checkBoxes.push(
+				<TouchableOpacity style={styles.faultTagItem} key={tagData.value} onPress={onPress}>
+					<CheckBox checked={checked} style={styles.faultTagCheckBox} onPress={onPress} />
+					<FaultTag tagValue={tagData.value} />
+				</TouchableOpacity>
+			);
+		}
+
+		return (
+			<View>
+				<View style={styles.faultTagBoxes}>
+					{checkBoxes}
+				</View>
+			</View>
+		);
+	}
+
 	render() {
 		if (this.dataMeta.visibleDisplays.loading === true) {
 			return null;
@@ -121,7 +183,8 @@ class EditAsset extends React.Component {
 							<Input value={model} onChangeText={this.onModelChange} />
 						</Item>
 						{this.buildStatusPicker()}
-						<View style={controlsStyle}>
+						{this.buildFaultTagCheckBoxes()}
+						<View style={styles.controlsStyle}>
 							<Button success onPress={this.onSavePress}><Text>Save</Text></Button>
 							<Button light onPress={this.onCancelPress}><Text>Cancel</Text></Button>
 						</View>

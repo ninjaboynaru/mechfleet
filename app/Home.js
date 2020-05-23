@@ -108,6 +108,7 @@ class Home extends React.Component {
 				<OverviewDataSection title="Assets">
 					<OverviewDataItem><Text>Online: {dataOverview.assets.online}</Text></OverviewDataItem>
 					<OverviewDataItem><Text>Online w Tasks: {dataOverview.assets.onlineWithTasks}</Text></OverviewDataItem>
+					<OverviewDataItem><Text>Online w Faults: {dataOverview.assets.onlineWithFaults}</Text></OverviewDataItem>
 					<OverviewDataItem><Text>Offline: {dataOverview.assets.offline}</Text></OverviewDataItem>
 					<OverviewDataItem><Text>Total: {dataOverview.assets.total}</Text></OverviewDataItem>
 				</OverviewDataSection>

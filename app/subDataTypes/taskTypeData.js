@@ -2,17 +2,17 @@ const typeMap = [
 	{
 		value: 1,
 		displayName: 'Install',
-		color: 'blue'
+		color: '#3F51B5'
 	},
 	{
 		value: 2,
 		displayName: 'Troubleshoot',
-		color: 'green'
+		color: '#d9534f'
 	},
 	{
 		value: 3,
 		displayName: 'Service',
-		color: 'yellow'
+		color: '#62B1F6'
 	}
 ];
 

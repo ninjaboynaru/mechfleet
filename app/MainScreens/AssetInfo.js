@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 import { Container, Content, H1, H3, Button, Text } from 'native-base';
 import TaskCard from '../ItemCards/TaskCard';
+import FaultTag from '../FaultTag';
 import WithDataMeta from '../metaComponents/WithDataMeta';
 import assetStatusData from '../subDataTypes/assetStatusData';
 import db from '../db/db';
@@ -10,8 +11,7 @@ import db from '../db/db';
 const styles = StyleSheet.create({
 	infoSection: {
 		flexDirection: 'row',
-		justifyContent: 'space-between',
-		marginBottom: 32
+		justifyContent: 'space-between'
 	},
 	infoText: {
 		flex: 1
@@ -23,6 +23,15 @@ const styles = StyleSheet.create({
 	},
 	infoControls__item: {
 		marginVertical: 5
+	},
+	faultTags: {
+		flexDirection: 'row',
+		flexWrap: 'wrap',
+		marginBottom: 24
+	},
+	tagContainer: {
+		marginRight: 4,
+		marginBottom: 4
 	},
 	taskList: {
 	}
@@ -144,6 +153,23 @@ class AssetInfo extends React.Component {
 		);
 	}
 
+	buildFaultTags() {
+		const faultTags = [];
+		for (const faultTagValue of this.asset.faultTags) {
+			faultTags.push(<FaultTag tagValue={faultTagValue} key={faultTagValue} containerStyle={styles.tagContainer} />);
+		}
+
+		if (this.asset.faultTags.length === 0) {
+			faultTags.push(<FaultTag tagValue={-1} key={-1} containerStyle={styles.tagContainer} />);
+		}
+
+		return (
+			<View style={styles.faultTags}>
+				{faultTags}
+			</View>
+		);
+	}
+
 	buildTaskList() {
 		const tasks = this.state.tasks;
 		const taskCards = [];
@@ -184,6 +210,7 @@ class AssetInfo extends React.Component {
 			<Container>
 				<Content padder>
 					{this.buildInfoSection()}
+					{this.buildFaultTags()}
 					{this.buildTaskList()}
 				</Content>
 			</Container>
