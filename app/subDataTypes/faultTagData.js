@@ -58,8 +58,8 @@ const tagMap = [
 		displayName: 'Structural',
 		color: '#5cb85c',
 		icon: {
-			type: 'FontAwesome',
-			name: 'building-o'
+			type: 'MaterialCommunityIcons',
+			name: 'grid-off'
 		}
 	}
 ];

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { Container, Content, H1, Button, Text } from 'native-base';
 import PartsBrowser from '../PartsBrowser';
 import PartCard from '../ItemCards/PartCard';
@@ -22,7 +22,17 @@ const styles = StyleSheet.create({
 		marginVertical: 5
 	},
 	partsList: {
-
+	},
+	descriptionContainer: {
+		flex: 1,
+		maxHeight: 150,
+		marginBottom: 32,
+		borderWidth: 1,
+		borderRadius: 4,
+		borderColor: 'rgba(0,0,0,0.4)'
+	},
+	descriptionText: {
+		padding: 6
 	}
 });
 
@@ -177,20 +187,15 @@ class TaskInfo extends React.Component {
 		);
 	}
 
-	buildPartList() {
-		const parts = this.state.parts;
-		const partCards = [];
-
-		for (const part of parts) {
-			const onDeletePress = () => { this.onDeletePartPress(part._id) };
-			const partCard = <PartCard part={part} onDeletePress={onDeletePress} key={part._id} />;
-			partCards.push(partCard);
+	buildTaskDescription() {
+		if (!this.task.description) {
+			return null;
 		}
 
 		return (
-			<View style={styles.partsList}>
-				{partCards}
-			</View>
+			<ScrollView style={styles.descriptionContainer}>
+				<Text style={styles.descriptionText}>{this.task.description}</Text>
+			</ScrollView>
 		);
 	}
 
@@ -214,6 +219,23 @@ class TaskInfo extends React.Component {
 		);
 	}
 
+	buildPartList() {
+		const parts = this.state.parts;
+		const partCards = [];
+
+		for (const part of parts) {
+			const onDeletePress = () => { this.onDeletePartPress(part._id) };
+			const partCard = <PartCard part={part} onDeletePress={onDeletePress} key={part._id} />;
+			partCards.push(partCard);
+		}
+
+		return (
+			<View style={styles.partsList}>
+				{partCards}
+			</View>
+		);
+	}
+
 	render() {
 		if (this.dataMeta.visibleDisplays.loading === true) {
 			return null;
@@ -232,6 +254,7 @@ class TaskInfo extends React.Component {
 			<Container>
 				<Content padder>
 					{this.buildInfoSection()}
+					{this.buildTaskDescription()}
 					{this.buildAddPartButton()}
 					{bottomComponent}
 				</Content>
