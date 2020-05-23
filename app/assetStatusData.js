@@ -6,13 +6,8 @@ const statusMap = [
 	},
 	{
 		value: 2,
-		displayName: 'Ofline',
+		displayName: 'Offline',
 		color: 'red'
-	},
-	{
-		value: 3,
-		displayName: 'Online w Faults',
-		color: 'purple'
 	}
 ];
 
