@@ -65,7 +65,7 @@ class EditTask extends React.Component {
 		else {
 			applyStateToNewTask();
 			newTask.parentAsset = this.parentAssetId;
-			newTask.compleated = false;
+			newTask.complete = false;
 			newTask.associatedParts = [];
 			newTask.createdOn = new Date().getTime();
 		}

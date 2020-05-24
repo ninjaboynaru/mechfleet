@@ -12,7 +12,7 @@ function ensureDataDirectory() {
 function ensureFile(filePath) {
 	return fs.exists(filePath).then((exists) => {
 		if (exists === false) {
-			return fs.writeFile(filePath, '', 'utf8');
+			return fs.writeFile(filePath, '[]', 'utf8');
 		}
 	});
 }

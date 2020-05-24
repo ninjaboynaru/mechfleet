@@ -5,7 +5,8 @@
       "model" : "V1",
       "noun" : "Mechanized Human Utility Apparatus",
       "status" : 1,
-			"faultTags": []
+			"faultTags": [],
+			"notes": ""
    },
    {
       "_id" : "A2",
@@ -13,7 +14,8 @@
       "model" : "V1",
       "noun" : "Mechanized Human Utility Apparatus",
       "status" : 1,
-			"faultTags": []
+			"faultTags": [],
+			"notes": ""
    },
    {
       "_id" : "A3",
@@ -21,7 +23,8 @@
       "model" : "V2",
       "noun" : "Mechanized Human Utility Apparatus",
       "status" : 2,
-			"faultTags": [1, 2 ,3]
+			"faultTags": [1, 2 ,3],
+			"notes": ""
    },
 	 {
 			"_id" : "A4",
@@ -29,6 +32,7 @@
 			"model" : "V2",
 			"noun" : "Mechanized Human Utility Apparatus",
 			"status" : 2,
-			"faultTags": [4]
+			"faultTags": [4],
+			"notes": ""
 	 }
 ]

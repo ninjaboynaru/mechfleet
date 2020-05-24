@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View, TouchableOpacity } from 'react-native';
-import { Container, Content, Form, Item, Input, Picker, Label, Button, CheckBox, Text } from 'native-base';
+import { Container, Content, Form, Item, Input, Picker, Label, Button, CheckBox, Text, Textarea } from 'native-base';
 import FaultTag from '../FaultTag';
 import WithDataMeta from '../metaComponents/WithDataMeta';
 import faultTagData from '../subDataTypes/faultTagData';
@@ -12,6 +12,9 @@ const styles = StyleSheet.create({
 		marginTop: 16,
 		flexDirection: 'row',
 		justifyContent: 'space-between'
+	},
+	textArea: {
+		width: '100%'
 	},
 	faultTagBoxes: {
 		marginTop: 24,
@@ -37,15 +40,23 @@ class EditAsset extends React.Component {
 		this.onNameChange = this.onNameChange.bind(this);
 		this.onNounChange = this.onNounChange.bind(this);
 		this.onModelChange = this.onModelChange.bind(this);
+		this.onNotesChange = this.onNotesChange.bind(this);
 		this.onStatusChange = this.onStatusChange.bind(this);
 		this.onFaultTagsChange = this.onFaultTagsChange.bind(this);
 		this.onSavePress = this.onSavePress.bind(this);
 		this.onCancelPress = this.onCancelPress.bind(this);
-		this.state = { name: '', noun: '', model: '', status: 1, faultTags: [] };
+		this.state = { name: '', noun: '', model: '', notes: '', status: 1, faultTags: [] };
 
 		if (this.asset) {
 			const asset = this.asset;
-			this.state = { name: asset.name, noun: asset.noun, model: asset.model, status: asset.status, faultTags: asset.faultTags };
+			this.state = {
+				name: asset.name,
+				noun: asset.noun,
+				model: asset.model,
+				notes: asset.notes,
+				status: asset.status,
+				faultTags: asset.faultTags
+			};
 		}
 		else {
 			this.props.navigation.setOptions({ title: 'New Asset' });
@@ -62,6 +73,10 @@ class EditAsset extends React.Component {
 
 	onModelChange(model) {
 		this.setState({ model });
+	}
+
+	onNotesChange(notes) {
+		this.setState({ notes });
 	}
 
 	onStatusChange(statusValue) {
@@ -88,6 +103,7 @@ class EditAsset extends React.Component {
 			name: state.name,
 			noun: state.noun,
 			model: state.model,
+			notes: state.notes,
 			status: state.status,
 			faultTags: state.faultTags
 		};
@@ -165,7 +181,7 @@ class EditAsset extends React.Component {
 			return null;
 		}
 
-		const { name, noun, model } = this.state;
+		const { name, noun, model, notes } = this.state;
 		return (
 			<Container>
 				<Content padder>
@@ -181,6 +197,16 @@ class EditAsset extends React.Component {
 						<Item stackedLabel>
 							<Label>Model</Label>
 							<Input value={model} onChangeText={this.onModelChange} />
+						</Item>
+						<Item stackedLabel>
+							<Label>Notes</Label>
+							<Textarea
+								style={styles.textArea}
+								rowSpan={5}
+								bordered
+								value={notes}
+								onChangeText={this.onNotesChange}
+							/>
 						</Item>
 						{this.buildStatusPicker()}
 						{this.buildFaultTagCheckBoxes()}

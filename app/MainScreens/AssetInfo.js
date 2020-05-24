@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, ScrollView } from 'react-native';
 import { Container, Content, H1, H3, Button, Text } from 'native-base';
 import TaskCard from '../ItemCards/TaskCard';
 import FaultTag from '../FaultTag';
@@ -32,6 +32,17 @@ const styles = StyleSheet.create({
 	tagContainer: {
 		marginRight: 4,
 		marginBottom: 4
+	},
+	notesContainer: {
+		flex: 1,
+		maxHeight: 150,
+		marginBottom: 32,
+		borderWidth: 1,
+		borderRadius: 4,
+		borderColor: 'rgba(0,0,0,0.4)'
+	},
+	notesText: {
+		padding: 6
 	},
 	taskList: {
 	}
@@ -170,6 +181,18 @@ class AssetInfo extends React.Component {
 		);
 	}
 
+	buildAssetNotes() {
+		if (!this.asset.notes) {
+			return null;
+		}
+
+		return (
+			<ScrollView style={styles.notesContainer}>
+				<Text style={styles.notesText}>{this.asset.notes}</Text>
+			</ScrollView>
+		);
+	}
+
 	buildTaskList() {
 		const tasks = this.state.tasks;
 		const taskCards = [];
@@ -211,6 +234,7 @@ class AssetInfo extends React.Component {
 				<Content padder>
 					{this.buildInfoSection()}
 					{this.buildFaultTags()}
+					{this.buildAssetNotes()}
 					{this.buildTaskList()}
 				</Content>
 			</Container>
