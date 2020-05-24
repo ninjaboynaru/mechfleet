@@ -1,68 +1,26 @@
-const tagMap = [
-	{
-		value: -1,
-		displayName: 'No Faults',
-		color: '#5cb85c',
+const tagMap = [];
+function defineFaultTag(value, displayName, color, iconType, iconName) {
+	tagMap.push({
+		value,
+		displayName,
+		color,
 		icon: {
-			type: 'Feather',
-			name: 'check-circle'
+			type: iconType,
+			name: iconName
 		}
-	},
-	{
-		value: 1,
-		displayName: 'Unknown',
-		color: 'gray',
-		icon: {
-			type: 'AntDesign',
-			name: 'question'
-		}
-	},
-	{
-		value: 2,
-		displayName: 'Electrical',
-		color: '#f0ad4e',
-		icon: {
-			type: 'Feather',
-			name: 'zap-off'
-		}
-	},
-	{
-		value: 3,
-		displayName: 'Engine',
-		color: 'black',
-		icon: {
-			type: 'MaterialCommunityIcons',
-			name: 'engine-off'
-		}
-	},
-	{
-		value: 4,
-		displayName: 'Mechanical',
-		color: 'purple',
-		icon: {
-			type: 'FontAwesome',
-			name: 'gears'
-		}
-	},
-	{
-		value: 5,
-		displayName: 'HVAC',
-		color: '#62B1F6',
-		icon: {
-			type: 'FontAwesome5',
-			name: 'dice-d20'
-		}
-	},
-	{
-		value: 6,
-		displayName: 'Structural',
-		color: '#5cb85c',
-		icon: {
-			type: 'MaterialCommunityIcons',
-			name: 'grid-off'
-		}
-	}
-];
+	});
+}
+
+defineFaultTag(-1, 'No Faults', '#5cb85c', 'Feather', 'check-circle');
+defineFaultTag(1, 'Unknown', 'gray', 'AntDesign', 'question');
+defineFaultTag(2, 'Other', 'gray', 'Feather', 'more-vertical');
+defineFaultTag(3, 'Electrical', '#f0ad4e', 'Feather', 'zap-off');
+defineFaultTag(4, 'Engine', 'black', 'MaterialCommunityIcons', 'engine-off');
+defineFaultTag(5, 'Mechanical', 'purple', 'FontAwesome', 'gears');
+defineFaultTag(6, 'HVAC', '#62B1F6', 'FontAwesome5', 'dice-d20');
+defineFaultTag(7, 'Structural', '#5cb85c', 'MaterialCommunityIcons', 'grid-off');
+defineFaultTag(8, 'Hydraulic', '#4659bd', 'FontAwesome5', 'water');
+defineFaultTag(9, 'Cooling', '#5870f0', 'MaterialCommunityIcons', 'ice-cream');
 
 function getTagData(tagValue) {
 	for (const tagData of tagMap) {
