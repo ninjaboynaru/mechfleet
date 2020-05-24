@@ -13,6 +13,21 @@ const typeMap = [
 		value: 3,
 		displayName: 'Service',
 		color: '#62B1F6'
+	},
+	{
+		value: 4,
+		displayName: 'Other',
+		color: 'gray'
+	},
+	{
+		value: 5,
+		displayName: 'Inspect',
+		color: '#f0ad4e'
+	},
+	{
+		value: 6,
+		displayName: 'PMCS',
+		color: '#5cb85c'
 	}
 ];
 

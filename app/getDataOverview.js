@@ -38,6 +38,15 @@ function buildTasksOverview(tasks, tasksOverviewObj) {
 			case 3:
 				tasksOverviewObj.service += 1;
 				break;
+			case 4:
+				tasksOverviewObj.other += 1;
+				break;
+			case 5:
+				tasksOverviewObj.inspect += 1;
+				break;
+			case 6:
+				tasksOverviewObj.pmcs += 1;
+				break;
 		}
 	}
 }
@@ -59,6 +68,9 @@ export default function getDataOverview() {
 			install: 0,
 			troubleshoot: 0,
 			service: 0,
+			other: 0,
+			inspect: 0,
+			pmcs: 0,
 			total: 0
 		},
 		parts: {

@@ -116,6 +116,9 @@ class Home extends React.Component {
 					<OverviewDataItem><Text>Install: {dataOverview.tasks.install}</Text></OverviewDataItem>
 					<OverviewDataItem><Text>Troubleshoot: {dataOverview.tasks.troubleshoot}</Text></OverviewDataItem>
 					<OverviewDataItem><Text>Service: {dataOverview.tasks.service}</Text></OverviewDataItem>
+					<OverviewDataItem><Text>Inspect: {dataOverview.tasks.inspect}</Text></OverviewDataItem>
+					<OverviewDataItem><Text>PMCS: {dataOverview.tasks.pmcs}</Text></OverviewDataItem>
+					<OverviewDataItem><Text>Other: {dataOverview.tasks.other}</Text></OverviewDataItem>
 					<OverviewDataItem><Text>Total: {dataOverview.tasks.total}</Text></OverviewDataItem>
 				</OverviewDataSection>
 				<OverviewDataSection title="Parts Database">
