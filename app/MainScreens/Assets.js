@@ -4,6 +4,18 @@ import AssetCard from '../ItemCards/AssetCard';
 import WithDataMeta from '../metaComponents/WithDataMeta';
 import db from '../db/db';
 
+function assetSortComparator(assetA, assetB) {
+	if (assetA.status === assetB.status) {
+		return assetA.name.localeCompare(assetB.name);
+	}
+
+	if (assetA.status === 2) {
+		return -1;
+	}
+
+	return 1;
+}
+
 class Assets extends React.Component {
 	constructor(props) {
 		super(props);
@@ -22,6 +34,7 @@ class Assets extends React.Component {
 		this.dataMeta.showLoading('Loading Assets');
 		db.getAssets().then(
 			(assets) => {
+				assets.sort(assetSortComparator);
 				this.dataMeta.hideLoading();
 				this.setState({ assets });
 			},
