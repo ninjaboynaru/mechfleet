@@ -14,6 +14,7 @@ const styles = StyleSheet.create({
 		borderColor: 'rgba(1, 1, 1, 0.2)'
 	},
 	infoBlock: {
+		flexShrink: 1,
 		marginLeft: 6,
 		marginVertical: 6
 	},

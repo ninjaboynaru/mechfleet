@@ -1,4 +1,4 @@
-import db from './db/db';
+import { assetModel, taskModel, partModel } from './db/models';
 
 function buildAssetsOverview(assets, assetsOverviewObj) {
 	for (const asset of assets) {
@@ -78,9 +78,9 @@ export default function getDataOverview() {
 		}
 	};
 
-	return db.getAssets().then((assets) => buildAssetsOverview(assets, overview.assets))
-	.then(db.getTasks).then((tasks) => buildTasksOverview(tasks, overview.tasks))
-	.then(db.getParts)
+	return assetModel.getAssets().then((assets) => buildAssetsOverview(assets, overview.assets))
+	.then(taskModel.getTasks).then((tasks) => buildTasksOverview(tasks, overview.tasks))
+	.then(partModel.getParts)
 	.then((parts) => buildPartsOverview(parts, overview.parts))
 	.then(() => overview);
 }

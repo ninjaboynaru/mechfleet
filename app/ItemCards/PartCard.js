@@ -37,7 +37,7 @@ export default function PartCard({ part, onPress, onDeletePress }) {
 				<View>
 					<H1>{part.name}</H1>
 					<Text>{part.noun}</Text>
-					<Text>{`NSN: ${part.NSN}`}</Text>
+					<Text>{`NSN: ${part.nsn}`}</Text>
 				</View>
 				{deleteButton}
 			</View>

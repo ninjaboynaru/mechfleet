@@ -1,81 +1,78 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Container, Content, Form, Item, Input, Picker, Label, Button, Text, Textarea } from 'native-base';
 import WithDataMeta from '../metaComponents/WithDataMeta';
 import taskTypeData from '../subDataTypes/taskTypeData';
-import db from '../db/db';
+import { taskModel } from '../db/models';
 
-const controlsStyle = {
-	marginTop: 16,
-	flexDirection: 'row',
-	justifyContent: 'space-between'
-};
-
-const textAreaStyle = {
-	width: '100%'
-};
+const styles = StyleSheet.create({
+	controls: {
+		marginTop: 16,
+		flexDirection: 'row',
+		justifyContent: 'space-between'
+	},
+	textArea: {
+		width: '100%'
+	}
+});
 
 class EditTask extends React.Component {
 	constructor(props) {
 		super(props);
 		this.parentAssetId = this.props.route.params.parentAssetId;
 		this.task = this.props.route.params.task;
-		this.dataMeta = this.props.dataMeta;
 		this.onNameChange = this.onNameChange.bind(this);
 		this.onDescriptionChange = this.onDescriptionChange.bind(this);
 		this.onTypeChange = this.onTypeChange.bind(this);
 		this.onSavePress = this.onSavePress.bind(this);
 		this.onCancelPress = this.onCancelPress.bind(this);
+		this.state = {};
 
 		if (this.task) {
-			const task = this.task;
-			this.state = { name: task.name, description: task.description, type: task.type };
+			this.state.task = { ...this.task };
 		}
 		else {
-			this.state = { name: '', description: '', type: 1 };
+			this.state.task = { name: '', description: '', type: 1 };
 			this.props.navigation.setOptions({ title: 'New Task' });
 		}
 	}
 
+	setTaskProperty(key, value) {
+		const task = this.state.task;
+		task[key] = value;
+
+		this.setState({ task });
+	}
+
 	onNameChange(name) {
-		this.setState({ name });
+		this.setTaskProperty('name', name);
 	}
 
 	onDescriptionChange(description) {
-		this.setState({ description });
+		this.setTaskProperty('description', description);
 	}
 
 	onTypeChange(type) {
-		this.setState({ type });
+		this.setTaskProperty('type', type);
 	}
 
 	onSavePress() {
-		const state = this.state;
-		let newTask = {};
-		const applyStateToNewTask = () => Object.assign(newTask, {
-			name: state.name,
-			description: state.description,
-			type: state.type
-		});
+		const task = { ...this.state.task };
 
-		if (this.task) {
-			newTask = { ...this.task };
-			applyStateToNewTask();
-		}
-		else {
-			applyStateToNewTask();
-			newTask.parentAsset = this.parentAssetId;
-			newTask.complete = false;
-			newTask.associatedParts = [];
-			newTask.createdOn = new Date().getTime();
+		if (!this.task) {
+			task.parentAsset = this.parentAssetId;
+			task.createdOn = new Date().getTime();
+			task.complete = false;
+			task.associatedParts = [];
 		}
 
-		const dataMeta = this.dataMeta;
+		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Saving Task');
-		db.saveTask(newTask).then(
+
+		taskModel.saveTask(task).then(
 			() => {
 				dataMeta.toastSuccess('Task Saved');
-				this.props.navigation.navigate('Assets');
+				this.props.navigation.goBack();
 			},
 			() => {
 				dataMeta.hideLoading();
@@ -98,7 +95,7 @@ class EditTask extends React.Component {
 
 		return (
 			<Item picker>
-				<Picker mode="dropdown" selectedValue={this.state.type} onValueChange={this.onTypeChange}>
+				<Picker mode="dropdown" selectedValue={this.state.task.type} onValueChange={this.onTypeChange}>
 					{pickerItems}
 				</Picker>
 			</Item>
@@ -106,11 +103,11 @@ class EditTask extends React.Component {
 	}
 
 	render() {
-		if (this.dataMeta.visibleDisplays.loading === true) {
+		if (this.props.dataMeta.visibleDisplays.loading === true) {
 			return null;
 		}
 
-		const { name, description } = this.state;
+		const { name, description } = this.state.task;
 		return (
 			<Container>
 				<Content padder>
@@ -122,7 +119,7 @@ class EditTask extends React.Component {
 						<Item stackedLabel>
 							<Label>Description</Label>
 							<Textarea
-								style={textAreaStyle}
+								style={styles.textArea}
 								rowSpan={5}
 								bordered
 								value={description}
@@ -130,7 +127,7 @@ class EditTask extends React.Component {
 							/>
 						</Item>
 						{this.buildTypePicker()}
-						<View style={controlsStyle}>
+						<View style={styles.controls}>
 							<Button success onPress={this.onSavePress}><Text>Save</Text></Button>
 							<Button light onPress={this.onCancelPress}><Text>Cancel</Text></Button>
 						</View>

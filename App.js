@@ -5,7 +5,7 @@ import getTheme from './native-base-theme/components';
 import theme from './native-base-theme/variables/custom';
 import { ErrorDisplay, LoadingDisplay } from './app/metaComponents';
 import MainNavigation from './app/MainNavigation';
-import db from './app/db/db';
+import fsInterface from './app/db/fsInterface';
 
 YellowBox.ignoreWarnings([
 	'VirtualizedLists should never be nested',
@@ -19,7 +19,7 @@ export default class App extends React.Component {
 	}
 
 	componentDidMount() {
-		db.init().then(
+		fsInterface.ensureFileIntegrity().then(
 			() => {
 				this.setState({ dbInitialized: true });
 			},

@@ -6,7 +6,7 @@ import TaskCard from '../ItemCards/TaskCard';
 import FaultTag from '../FaultTag';
 import WithDataMeta from '../metaComponents/WithDataMeta';
 import assetStatusData from '../subDataTypes/assetStatusData';
-import db from '../db/db';
+import { assetModel, taskModel } from '../db/models';
 
 const styles = StyleSheet.create({
 	infoSection: {
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
 class AssetInfo extends React.Component {
 	constructor(props) {
 		super(props);
-		this.asset = this.props.route.params;
+		this.assetId = this.props.route.params;
 		this.onFocus = this.onFocus.bind(this);
 		this.onDeletePress = this.onDeletePress.bind(this);
 		this.onDeleteConfirm = this.onDeleteConfirm.bind(this);
@@ -59,7 +59,7 @@ class AssetInfo extends React.Component {
 		this.onTaskArchivePress = this.onTaskArchivePress.bind(this);
 		this.onAddTaskPress = this.onAddTaskPress.bind(this);
 		this.onTaskCardPress = this.onTaskCardPress.bind(this);
-		this.state = { tasks: [], showCompletedTasks: false };
+		this.state = { asset: null, tasks: [], showCompletedTasks: false };
 	}
 
 	componentDidMount() {
@@ -67,14 +67,46 @@ class AssetInfo extends React.Component {
 	}
 
 	onFocus() {
-		this.loadTasks();
+		this.loadData();
+	}
+
+	loadData() {
+		this.loadAsset().then((asset) => {
+			if (!asset) {
+				return;
+			}
+
+			this.loadTasks();
+		});
+	}
+
+	loadAsset() {
+		const dataMeta = this.props.dataMeta;
+		dataMeta.showLoading('Loading Asset');
+
+		return assetModel.getAsset(this.assetId).then(
+			(asset) => {
+				dataMeta.hideLoading();
+				if (!asset) {
+					dataMeta.toastDanger('Asset not found');
+					return;
+				}
+
+				this.setState({ asset });
+				return asset;
+			},
+			() => {
+				dataMeta.hideLoading();
+				dataMeta.toastDanger('Error loading asset');
+			}
+		);
 	}
 
 	loadTasks() {
 		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Loading Tasks');
 
-		db.getAssetTasks(this.asset._id, this.state.showCompletedTasks).then(
+		return taskModel.getAssetTasks(this.assetId, this.state.showCompletedTasks).then(
 			(tasks) => {
 				dataMeta.hideLoading();
 				this.setState({ tasks });
@@ -98,9 +130,9 @@ class AssetInfo extends React.Component {
 	onDeleteConfirm() {
 		const dataMeta = this.props.dataMeta;
 		dataMeta.closeButtonOverlay();
-		dataMeta.showLoading('Deleating Asset');
+		dataMeta.showLoading('Deleting  Asset');
 
-		db.deleteAsset(this.asset._id).then(
+		assetModel.deleteAsset(this.state.asset._id).then(
 			() => {
 				dataMeta.hideLoading();
 				dataMeta.toastSuccess('Asset Deleated');
@@ -114,7 +146,7 @@ class AssetInfo extends React.Component {
 	}
 
 	onEditPress() {
-		this.props.navigation.navigate('Edit Asset', this.asset);
+		this.props.navigation.navigate('Edit Asset', this.state.asset);
 	}
 
 	onTaskArchivePress() {
@@ -122,15 +154,15 @@ class AssetInfo extends React.Component {
 	}
 
 	onAddTaskPress() {
-		this.props.navigation.navigate('Edit Task', { parentAssetId: this.asset._id });
+		this.props.navigation.navigate('Edit Task', { parentAssetId: this.state.asset._id });
 	}
 
-	onTaskCardPress(task) {
-		this.props.navigation.navigate('Task Info', task);
+	onTaskCardPress(taskId) {
+		this.props.navigation.navigate('Task Info', taskId);
 	}
 
 	buildInfoSection() {
-		const asset = this.asset;
+		const asset = this.state.asset;
 		const statusText = assetStatusData.getStatusData(asset.status).displayName;
 		let archiveText;
 
@@ -166,11 +198,11 @@ class AssetInfo extends React.Component {
 
 	buildFaultTags() {
 		const faultTags = [];
-		for (const faultTagValue of this.asset.faultTags) {
+		for (const faultTagValue of this.state.asset.faultTags) {
 			faultTags.push(<FaultTag tagValue={faultTagValue} key={faultTagValue} containerStyle={styles.tagContainer} />);
 		}
 
-		if (this.asset.faultTags.length === 0) {
+		if (this.state.asset.faultTags.length === 0) {
 			faultTags.push(<FaultTag tagValue={-1} key={-1} containerStyle={styles.tagContainer} />);
 		}
 
@@ -182,13 +214,13 @@ class AssetInfo extends React.Component {
 	}
 
 	buildAssetNotes() {
-		if (!this.asset.notes) {
+		if (!this.state.asset.notes) {
 			return null;
 		}
 
 		return (
 			<ScrollView style={styles.notesContainer}>
-				<Text style={styles.notesText}>{this.asset.notes}</Text>
+				<Text style={styles.notesText}>{this.state.asset.notes}</Text>
 			</ScrollView>
 		);
 	}
@@ -198,7 +230,7 @@ class AssetInfo extends React.Component {
 		const taskCards = [];
 
 		for (const task of tasks) {
-			const onPress = () => this.onTaskCardPress(task);
+			const onPress = () => this.onTaskCardPress(task._id);
 			const taskCard = <TaskCard task={task} onPress={onPress} key={task._id} />;
 			taskCards.push(taskCard);
 		}
@@ -225,7 +257,7 @@ class AssetInfo extends React.Component {
 	}
 
 	render() {
-		if (this.props.dataMeta.visibleDisplays.loading === true) {
+		if (this.props.dataMeta.visibleDisplays.loading === true || !this.state.asset) {
 			return null;
 		}
 

@@ -38,7 +38,14 @@ function writeFileJson(filePath, object) {
 	return fs.unlink(filePath).then(() => fs.writeFile(filePath, jsonString));
 }
 
+/**
+* File system interface
+*/
 export default new function() {
+	/**
+	* Ensures all required folders and files exist.
+	* Call this function before calling any other fsInterface functions
+	*/
 	this.ensureFileIntegrity = function() {
 		return ensureDataDirectory().then(ensureAssetsFile).then(ensureTasksFile).then(ensurePartsFile);
 	};

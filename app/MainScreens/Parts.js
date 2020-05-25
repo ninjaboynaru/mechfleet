@@ -4,7 +4,7 @@ import { Container, Content, Input, Button, Text } from 'native-base';
 import Fuse from 'fuse.js';
 import PartCard from '../ItemCards/PartCard';
 import WithDataMeta from '../metaComponents/WithDataMeta';
-import db from '../db/db';
+import { partModel } from '../db/models';
 
 const styles = StyleSheet.create({
 	controls: {
@@ -22,6 +22,10 @@ const fuseSearchOptions = {
 	includeScore: false,
 	keys: ['name', 'noun', 'NSN']
 };
+
+function partSortComparator(partA, partB) {
+	return partA.name.localeCompare(partB.name);
+}
 
 class Parts extends React.Component {
 	constructor(props) {
@@ -42,9 +46,10 @@ class Parts extends React.Component {
 		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Loading Parts');
 
-		db.getParts().then(
+		partModel.getParts().then(
 			(parts) => {
 				dataMeta.hideLoading();
+				parts.sort(partSortComparator);
 				this.fuseSearcher = new Fuse(parts, fuseSearchOptions);
 				this.setState({ parts, matchedParts: parts });
 			},
@@ -70,6 +75,7 @@ class Parts extends React.Component {
 			matchedParts.push(result.item);
 		}
 
+		matchedParts.sort(partSortComparator);
 		this.setState({ matchedParts });
 	}
 
@@ -77,15 +83,15 @@ class Parts extends React.Component {
 		this.props.navigation.navigate('Edit Part');
 	}
 
-	onPartPress(part) {
-		this.props.navigation.navigate('Part Info', part);
+	onPartPress(partId) {
+		this.props.navigation.navigate('Part Info', partId);
 	}
 
 	buildPartsList() {
 		const partCards = [];
 
 		for (const part of this.state.matchedParts) {
-			const onPress = () => this.onPartPress(part);
+			const onPress = () => this.onPartPress(part._id);
 			partCards.push(<PartCard key={part._id} part={part} onPress={onPress} />);
 		}
 

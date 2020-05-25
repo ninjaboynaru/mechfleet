@@ -5,7 +5,7 @@ import PartsBrowser from '../PartsBrowser';
 import PartCard from '../ItemCards/PartCard';
 import WithDataMeta from '../metaComponents/WithDataMeta';
 import taskTypeData from '../subDataTypes/taskTypeData';
-import db from '../db/db';
+import { taskModel, partModel } from '../db/models';
 
 const styles = StyleSheet.create({
 	infoSection: {
@@ -15,6 +15,7 @@ const styles = StyleSheet.create({
 		marginBottom: 32
 	},
 	infoText: {
+		flexShrink: 1
 	},
 	infoControls: {
 	},
@@ -39,8 +40,8 @@ const styles = StyleSheet.create({
 class TaskInfo extends React.Component {
 	constructor(props) {
 		super(props);
-		this.task = this.props.route.params;
-		this.dataMeta = this.props.dataMeta;
+		this.taskId = this.props.route.params;
+		this.onFocus = this.onFocus.bind(this);
 		this.onDeletePress = this.onDeletePress.bind(this);
 		this.onDeleteConfirm = this.onDeleteConfirm.bind(this);
 		this.onEditPress = this.onEditPress.bind(this);
@@ -48,29 +49,76 @@ class TaskInfo extends React.Component {
 		this.togglePartsBrowser = this.togglePartsBrowser.bind(this);
 		this.onDeletePartPress = this.onDeletePartPress.bind(this);
 		this.addPart = this.addPart.bind(this);
-		this.state = { parts: [], showPartsBrowser: false };
+		this.state = { task: null, parts: [], showPartsBrowser: false };
 	}
 
 	componentDidMount() {
-		this.loadParts();
+		this.props.navigation.addListener('focus', this.onFocus);
 	}
 
-	loadParts() {
-		this.dataMeta.showLoading('Loading Parts');
-		db.getPartsById(this.task.associatedParts).then(
+	onFocus() {
+		this.loadData();
+	}
+
+	loadData() {
+		this.loadTask().then((task) => {
+			if (!task) {
+				return;
+			}
+
+			this.loadParts(task);
+		});
+	}
+
+	loadTask() {
+		const dataMeta = this.props.dataMeta;
+		dataMeta.showLoading('Loading Task');
+
+		return taskModel.getTask(this.taskId).then(
+			(task) => {
+				dataMeta.hideLoading();
+				if (!task) {
+					dataMeta.toastDanger('Task not found');
+					return;
+				}
+
+				this.setState({ task });
+				return task;
+			},
+			() => {
+				dataMeta.hideLoading();
+				dataMeta.toastDanger('Error loading task');
+			}
+		);
+	}
+
+	loadParts(task) {
+		const dataMeta = this.props.dataMeta;
+		dataMeta.showLoading('Loading Parts');
+
+		let taskToUse;
+
+		if (task) {
+			taskToUse = task;
+		}
+		else {
+			taskToUse = this.state.task;
+		}
+
+		partModel.getPartsById(taskToUse.associatedParts).then(
 			(parts) => {
-				this.dataMeta.hideLoading();
+				dataMeta.hideLoading();
 				this.setState({ parts });
 			},
 			() => {
-				this.dataMeta.hideLoading();
-				this.dataMeta.toastDanger('Error loading parts');
+				dataMeta.hideLoading();
+				dataMeta.toastDanger('Error loading parts');
 			}
 		);
 	}
 
 	onDeletePress() {
-		this.dataMeta.buttonOverlay(
+		this.props.dataMeta.buttonOverlay(
 			'Are you sure you want to delete this task',
 			'Delete',
 			'danger',
@@ -79,33 +127,36 @@ class TaskInfo extends React.Component {
 	}
 
 	onDeleteConfirm() {
-		this.dataMeta.closeButtonOverlay();
-		this.dataMeta.showLoading('Deleating');
-		db.deleteTask(this.task._id).then(
+		const dataMeta = this.props.dataMeta;
+		dataMeta.closeButtonOverlay();
+		dataMeta.showLoading('Deleating');
+
+		taskModel.deleteTask(this.state.task._id).then(
 			() => {
-				this.dataMeta.hideLoading();
-				this.dataMeta.toastSuccess('Task Deleated');
-				this.props.navigation.navigate('Assets');
+				dataMeta.hideLoading();
+				dataMeta.toastSuccess('Task Deleated');
+				this.props.navigation.goBack();
 			},
 			() => {
-				this.dataMeta.hideLoading();
-				this.dataMeta.toastDanger('Error deleating task');
+				dataMeta.hideLoading();
+				dataMeta.toastDanger('Error deleating task');
 			}
 		);
 	}
 
 	onEditPress() {
-		this.props.navigation.navigate('Edit Task', { task: this.task });
+		this.props.navigation.navigate('Edit Task', { task: this.state.task });
 	}
 
 	onCompletePress() {
-		const dataMeta = this.dataMeta;
+		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Changing Task Status');
 
-		db.toggleTaskComplete(this.task).then(
+		taskModel.toggleTaskComplete(this.state.task._id).then(
 			() => {
 				dataMeta.hideLoading();
 				dataMeta.toastSuccess('Task status changed');
+				this.loadTask();
 			},
 			() => {
 				dataMeta.hideLoading();
@@ -115,13 +166,14 @@ class TaskInfo extends React.Component {
 	}
 
 	onDeletePartPress(partId) {
-		const dataMeta = this.dataMeta;
+		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Deleating Part');
-		db.removePartFromTask(this.task, partId).then(
+
+		taskModel.removePartFromTask(this.state.task._id, partId).then(
 			() => {
 				dataMeta.hideLoading();
 				dataMeta.toastSuccess('Part Deleated');
-				this.loadParts();
+				this.loadData();
 			},
 			() => {
 				dataMeta.hideLoading();
@@ -135,15 +187,15 @@ class TaskInfo extends React.Component {
 	}
 
 	addPart(part) {
-		const dataMeta = this.dataMeta;
+		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Adding Part');
 
-		db.addPartToTask(this.task, part._id).then(
+		taskModel.addPartToTask(this.state.task._id, part._id).then(
 			() => {
 				dataMeta.hideLoading();
 				dataMeta.toastSuccess('Part Added');
 				this.setState({ showPartsBrowser: false });
-				this.loadParts();
+				this.loadData();
 			},
 			() => {
 				dataMeta.hideLoading();
@@ -153,7 +205,7 @@ class TaskInfo extends React.Component {
 	}
 
 	buildInfoSection() {
-		const task = this.task;
+		const task = this.state.task;
 		const date = new Date(task.createdOn);
 		const dateString = date.toDateString();
 
@@ -188,13 +240,13 @@ class TaskInfo extends React.Component {
 	}
 
 	buildTaskDescription() {
-		if (!this.task.description) {
+		if (!this.state.task.description) {
 			return null;
 		}
 
 		return (
 			<ScrollView style={styles.descriptionContainer}>
-				<Text style={styles.descriptionText}>{this.task.description}</Text>
+				<Text style={styles.descriptionText}>{this.state.task.description}</Text>
 			</ScrollView>
 		);
 	}
@@ -237,14 +289,14 @@ class TaskInfo extends React.Component {
 	}
 
 	render() {
-		if (this.dataMeta.visibleDisplays.loading === true) {
+		if (this.props.dataMeta.visibleDisplays.loading === true || !this.state.task) {
 			return null;
 		}
 
 		let bottomComponent;
 
 		if (this.state.showPartsBrowser === true) {
-			bottomComponent = <PartsBrowser onPartPress={this.addPart} ignorePartIds={this.task.associatedParts} />;
+			bottomComponent = <PartsBrowser onPartPress={this.addPart} ignorePartIds={this.state.task.associatedParts} />;
 		}
 		else {
 			bottomComponent = this.buildPartList();

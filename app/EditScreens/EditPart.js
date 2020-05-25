@@ -2,7 +2,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { Container, Content, Form, Item, Input, Label, Button, Text } from 'native-base';
 import WithDataMeta from '../metaComponents/WithDataMeta';
-import db from '../db/db';
+import { partModel } from '../db/models';
 
 const controlsStyle = {
 	marginTop: 16,
@@ -20,49 +20,45 @@ class EditPart extends React.Component {
 		this.onNsnChange = this.onNsnChange.bind(this);
 		this.onSavePress = this.onSavePress.bind(this);
 		this.onCancelPress = this.onCancelPress.bind(this);
+		this.state = {};
 
 
 		if (this.part) {
-			const part = this.part;
-			this.state = { name: part.name, noun: part.noun, NSN: part.NSN };
+			this.state.part = { ...this.part };
 		}
 		else {
-			this.state = { name: '', noun: '', NSN: '' };
+			this.state.part = { name: '', noun: '', nsn: '' };
 			this.props.navigation.setOptions({ title: 'New Part' });
 		}
 	}
 
+	setPartProperty(key, value) {
+		const part = this.state.part;
+		part[key] = value;
+
+		this.setState({ part });
+	}
+
 	onNameChange(name) {
-		this.setState({ name });
+		this.setPartProperty('name', name);
 	}
 
 	onNounChange(noun) {
-		this.setState({ noun });
+		this.setPartProperty('noun', noun);
 	}
 
-	onNsnChange(NSN) {
-		this.setState({ NSN });
+	onNsnChange(nsn) {
+		this.setPartProperty('nsn', nsn);
 	}
 
 	onSavePress() {
-		const state = this.state;
-		const newPart = {
-			name: state.name,
-			noun: state.noun,
-			NSN: state.NSN
-		};
-
-		if (this.part) {
-			newPart._id = this.part._id;
-		}
-
 		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Saving Part');
 
-		db.savePart(newPart).then(
+		partModel.savePart(this.state.part).then(
 			() => {
 				dataMeta.toastSuccess('Part Saved');
-				this.props.navigation.navigate('Parts');
+				this.props.navigation.goBack();
 			},
 			() => {
 				dataMeta.hideLoading();
@@ -80,7 +76,7 @@ class EditPart extends React.Component {
 			return null;
 		}
 
-		const { name, noun, NSN } = this.state;
+		const { name, noun, nsn } = this.state.part;
 		return (
 			<Container>
 				<Content padder>
@@ -95,7 +91,7 @@ class EditPart extends React.Component {
 						</Item>
 						<Item stackedLabel>
 							<Label>NSN</Label>
-							<Input value={NSN} onChangeText={this.onNsnChange} />
+							<Input value={nsn} onChangeText={this.onNsnChange} />
 						</Item>
 						<View style={controlsStyle}>
 							<Button success onPress={this.onSavePress}><Text>Save</Text></Button>

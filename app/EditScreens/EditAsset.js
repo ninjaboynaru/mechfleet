@@ -5,7 +5,7 @@ import FaultTag from '../FaultTag';
 import WithDataMeta from '../metaComponents/WithDataMeta';
 import faultTagData from '../subDataTypes/faultTagData';
 import assetStatusData from '../subDataTypes/assetStatusData';
-import db from '../db/db';
+import { assetModel } from '../db/models';
 
 const styles = StyleSheet.create({
 	controlsStyle: {
@@ -45,80 +45,67 @@ class EditAsset extends React.Component {
 		this.onFaultTagsChange = this.onFaultTagsChange.bind(this);
 		this.onSavePress = this.onSavePress.bind(this);
 		this.onCancelPress = this.onCancelPress.bind(this);
-		this.state = { name: '', noun: '', model: '', notes: '', status: 1, faultTags: [] };
+		this.state = {};
 
 		if (this.asset) {
-			const asset = this.asset;
-			this.state = {
-				name: asset.name,
-				noun: asset.noun,
-				model: asset.model,
-				notes: asset.notes,
-				status: asset.status,
-				faultTags: asset.faultTags
-			};
+			this.state.asset = { ...this.asset };
 		}
 		else {
+			this.state.asset = { name: '', noun: '', model: '', notes: '', status: 1, faultTags: [] };
 			this.props.navigation.setOptions({ title: 'New Asset' });
 		}
 	}
 
+	setAssetProperty(key, value) {
+		const asset = this.state.asset;
+		asset[key] = value;
+
+		this.setState({ asset });
+	}
+
 	onNameChange(name) {
-		this.setState({ name });
+		this.setAssetProperty('name', name);
 	}
 
 	onNounChange(noun) {
-		this.setState({ noun });
+		this.setAssetProperty('noun', noun);
 	}
 
 	onModelChange(model) {
-		this.setState({ model });
+		this.setAssetProperty('model', model);
 	}
 
 	onNotesChange(notes) {
-		this.setState({ notes });
+		this.setAssetProperty('notes', notes);
 	}
 
-	onStatusChange(statusValue) {
-		this.setState({ status: statusValue });
+	onStatusChange(status) {
+		this.setAssetProperty('status', status);
 	}
 
 	onFaultTagsChange(tagValue, removeTag) {
-		const newFaultTags = [...this.state.faultTags];
+		const asset = this.state.asset;
+		const newFaultTags = [...asset.faultTags];
 
 		if (removeTag === true) {
-			const indexToRemove = this.state.faultTags.indexOf(tagValue);
+			const indexToRemove = newFaultTags.indexOf(tagValue);
 			newFaultTags.splice(indexToRemove, 1);
 		}
 		else {
 			newFaultTags.push(tagValue);
 		}
 
-		this.setState({ faultTags: newFaultTags });
+		this.setAssetProperty('faultTags', newFaultTags);
 	}
 
 	onSavePress() {
-		const state = this.state;
-		const newAsset = {
-			name: state.name,
-			noun: state.noun,
-			model: state.model,
-			notes: state.notes,
-			status: state.status,
-			faultTags: state.faultTags
-		};
-
-		if (this.asset) {
-			newAsset._id = this.asset._id;
-		}
-
 		const dataMeta = this.dataMeta;
 		dataMeta.showLoading('Saving Asset');
 
-		db.saveAsset(newAsset).then(
+		assetModel.saveAsset(this.state.asset).then(
 			() => {
 				dataMeta.toastSuccess('Asset Saved');
-				this.props.navigation.navigate('Assets');
+				this.props.navigation.goBack();
 			},
 			() => {
 				dataMeta.hideLoading();
@@ -141,7 +128,7 @@ class EditAsset extends React.Component {
 
 		return (
 			<Item picker>
-				<Picker mode="dropdown" selectedValue={this.state.status} onValueChange={this.onStatusChange}>
+				<Picker mode="dropdown" selectedValue={this.state.asset.status} onValueChange={this.onStatusChange}>
 					{pickerItems}
 				</Picker>
 			</Item>
@@ -156,7 +143,7 @@ class EditAsset extends React.Component {
 				continue;
 			}
 
-			const checked = this.state.faultTags.includes(tagData.value);
+			const checked = this.state.asset.faultTags.includes(tagData.value);
 			const onPress = () => this.onFaultTagsChange(tagData.value, checked);
 
 			checkBoxes.push(
@@ -181,7 +168,7 @@ class EditAsset extends React.Component {
 			return null;
 		}
 
-		const { name, noun, model, notes } = this.state;
+		const { name, noun, model, notes } = this.state.asset;
 		return (
 			<Container>
 				<Content padder>

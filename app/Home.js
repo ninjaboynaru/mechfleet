@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 import { Container, Content, H1, Button, Text } from 'native-base';
 import getDataOverview from './getDataOverview';
@@ -143,10 +142,5 @@ class Home extends React.Component {
 		);
 	}
 }
-
-Home.propTypes = {
-	navigation: PropTypes.object.isRequired,
-	dataMeta: PropTypes.object.isRequired
-};
 
 export default WithDataMeta(Home);

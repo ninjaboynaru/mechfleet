@@ -2,7 +2,7 @@ import React from 'react';
 import { Container, Content, Button, Text } from 'native-base';
 import AssetCard from '../ItemCards/AssetCard';
 import WithDataMeta from '../metaComponents/WithDataMeta';
-import db from '../db/db';
+import { assetModel } from '../db/models';
 
 function assetSortComparator(assetA, assetB) {
 	if (assetA.status === assetB.status) {
@@ -31,8 +31,12 @@ class Assets extends React.Component {
 	}
 
 	onFocus() {
+		this.loadAssets();
+	}
+
+	loadAssets() {
 		this.dataMeta.showLoading('Loading Assets');
-		db.getAssets().then(
+		assetModel.getAssets(true).then(
 			(assets) => {
 				assets.sort(assetSortComparator);
 				this.dataMeta.hideLoading();
@@ -45,8 +49,8 @@ class Assets extends React.Component {
 		);
 	}
 
-	onAssetCardPress(asset) {
-		this.props.navigation.navigate('Asset Info', asset);
+	onAssetCardPress(assetId) {
+		this.props.navigation.navigate('Asset Info', assetId);
 	}
 
 	onAddAssetPress() {
@@ -57,7 +61,7 @@ class Assets extends React.Component {
 		const assetCards = [];
 
 		for (const asset of this.state.assets) {
-			const onPress = () => this.onAssetCardPress(asset);
+			const onPress = () => this.onAssetCardPress(asset._id);
 			assetCards.push(<AssetCard key={asset._id} asset={asset} onPress={onPress} />);
 		}
 

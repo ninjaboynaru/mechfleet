@@ -1,11 +1,10 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 import { Input } from 'native-base';
 import Fuse from 'fuse.js';
 import PartCard from './ItemCards/PartCard';
 import WithDataMeta from './metaComponents/WithDataMeta';
-import db from './db/db';
+import { partModel } from './db/models';
 
 const styles = StyleSheet.create({
 	controls: {
@@ -21,8 +20,12 @@ const styles = StyleSheet.create({
 
 const fuseSearchOptions = {
 	includeScore: false,
-	keys: ['name', 'noun', 'NSN']
+	keys: ['name', 'noun', 'nsn']
 };
+
+function partSortComparator(partA, partB) {
+	return partA.name.localeCompare(partB.name);
+}
 
 class PartsBrowser extends React.Component {
 	constructor(props) {
@@ -37,8 +40,9 @@ class PartsBrowser extends React.Component {
 		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Loading Parts');
 
-		db.getParts().then(
+		partModel.getParts().then(
 			(parts) => {
+				parts.sort(partSortComparator);
 				dataMeta.hideLoading();
 				this.fuseSearcher = new Fuse(parts, fuseSearchOptions);
 				this.setState({ parts, matchedParts: parts });
@@ -65,6 +69,7 @@ class PartsBrowser extends React.Component {
 			matchedParts.push(result.item);
 		}
 
+		matchedParts.sort(partSortComparator);
 		this.setState({ matchedParts });
 	}
 
@@ -106,12 +111,6 @@ class PartsBrowser extends React.Component {
 		);
 	}
 }
-
-PartsBrowser.propTypes = {
-	dataMeta: PropTypes.object.isRequired,
-	onPartPress: PropTypes.func.isRequired,
-	ignorePartIds: PropTypes.array
-};
 
 PartsBrowser.defaultProps = {
 	ignorePartIds: []
