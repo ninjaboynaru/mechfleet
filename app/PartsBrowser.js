@@ -7,8 +7,12 @@ import WithDataMeta from './metaComponents/WithDataMeta';
 import { partModel } from './db/models';
 
 const styles = StyleSheet.create({
+	container: {
+
+	},
 	controls: {
 		flexDirection: 'row',
+		alignItems: 'center',
 		justifyContent: 'space-between'
 	},
 	searchInput: {
@@ -97,7 +101,7 @@ class PartsBrowser extends React.Component {
 		}
 
 		return (
-			<View>
+			<View style={styles.container}>
 				<View style={styles.controls}>
 					<Input
 						placeholder="Search Parts"
@@ -105,6 +109,7 @@ class PartsBrowser extends React.Component {
 						value={this.state.searchTerm}
 						onChangeText={this.onSearchTermChange}
 					/>
+					{this.props.extraControls}
 				</View>
 				{this.buildPartsList()}
 			</View>
@@ -113,7 +118,9 @@ class PartsBrowser extends React.Component {
 }
 
 PartsBrowser.defaultProps = {
-	ignorePartIds: []
+	onPartPress: () => {},
+	ignorePartIds: [],
+	extraControls: null
 };
 
 export default WithDataMeta(PartsBrowser);
