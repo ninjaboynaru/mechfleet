@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
 class Tasks extends React.Component {
 	constructor(props) {
 		super(props);
+		this.onFocus = this.onFocus.bind(this);
 		this.onTaskPress = this.onTaskPress.bind(this);
 		this.onSearchTermChange = this.onSearchTermChange.bind(this);
 		this.toggleShowFilter = this.toggleShowFilter.bind(this);
@@ -51,6 +52,10 @@ class Tasks extends React.Component {
 	}
 
 	componentDidMount() {
+		this.props.navigation.addListener('focus', this.onFocus);
+	}
+
+	onFocus() {
 		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Loading Tasks');
 
