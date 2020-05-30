@@ -22,7 +22,12 @@ const styles = StyleSheet.create({
 	infoControls__item: {
 		marginVertical: 5
 	},
-	partsList: {
+	parentText: {
+		fontWeight: 'bold'
+	},
+	missingParentText: {
+		fontStyle: 'italic',
+		color: 'red'
 	},
 	descriptionContainer: {
 		flex: 1,
@@ -34,6 +39,8 @@ const styles = StyleSheet.create({
 	},
 	descriptionText: {
 		padding: 6
+	},
+	partsList: {
 	}
 });
 
@@ -217,13 +224,22 @@ class TaskInfo extends React.Component {
 
 		const typeText = taskTypeData.getTypeData(task.type).displayName;
 
+		let parentName = null;
+		if (task.parentName) {
+			parentName = <Text style={styles.parentText}>{task.parentName}</Text>;
+		}
+		else if (task.parentName === null) {
+			parentName = <Text style={[styles.parentText, styles.missingParentText]}>Missing Parent Asset</Text>;
+		}
+
+
 		return (
 			<View style={styles.infoSection}>
 				<View style={styles.infoText}>
 					<H1>{task.name}</H1>
 					<Text>Type: {typeText}</Text>
 					<Text>Crated On: {dateString}</Text>
-					<Text>{task.parentName}</Text>
+					{parentName}
 				</View>
 				<View style={styles.infoControls}>
 					<Button small block style={styles.infoControls__item} onPress={this.onEditPress}>

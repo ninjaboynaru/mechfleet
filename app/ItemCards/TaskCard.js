@@ -18,6 +18,13 @@ const styles = StyleSheet.create({
 		marginLeft: 6,
 		marginVertical: 6
 	},
+	parentText: {
+		fontWeight: 'bold'
+	},
+	missingParentText: {
+		fontStyle: 'italic',
+		color: 'red'
+	},
 	typeBlock: {
 		width: '40%',
 		justifyContent: 'center',
@@ -36,7 +43,14 @@ export default function TaskCard({ task, onPress }) {
 	const typeData = taskTypeData.getTypeData(task.type);
 	const typeName = typeData.displayName;
 	const typeBlockColorStyle = { backgroundColor: typeData.color };
-	const parentName = task.parentName ? <Text>{task.parentName}</Text> : null;
+	let parentName = null;
+
+	if (task.parentName) {
+		parentName = <Text style={styles.parentText}>{task.parentName}</Text>;
+	}
+	else if (task.parentName === null) {
+		parentName = <Text style={[styles.parentText, styles.missingParentText]}>Missing Parent Asset</Text>;
+	}
 
 	return (
 		<TouchableOpacity onPress={onPress}>

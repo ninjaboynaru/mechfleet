@@ -71,6 +71,15 @@ export default new function() {
 		});
 	};
 
+	this.deleteAssetTasks = function(assetId) {
+		return this.getTasks().then((tasks) => {
+			const queryExpression = jsonata(`[$[parentAsset != '${assetId}']]`);
+			const tasksToSave = queryExpression.evaluate(tasks);
+
+			return fsInterface.writeTasksFile(tasksToSave);
+		});
+	};
+
 	this.saveTask = function(task) {
 		const isNewTask = !Object.prototype.hasOwnProperty.call(task, '_id');
 		if (isNewTask === true) {

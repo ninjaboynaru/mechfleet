@@ -58,7 +58,7 @@ export default new function() {
 			}
 
 			assets.splice(assetIndex, 1);
-			return fsInterface.writeAssetsFile(assets);
+			return fsInterface.writeAssetsFile(assets).then(() => taskModel.deleteAssetTasks(assetId));
 		});
 	};
 
