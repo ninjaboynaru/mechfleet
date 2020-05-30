@@ -119,6 +119,8 @@ class Home extends React.Component {
 					<OverviewDataItem><Text>Service: {dataOverview.tasks.service}</Text></OverviewDataItem>
 					<OverviewDataItem><Text>Inspect: {dataOverview.tasks.inspect}</Text></OverviewDataItem>
 					<OverviewDataItem><Text>PMCS: {dataOverview.tasks.pmcs}</Text></OverviewDataItem>
+					<OverviewDataItem><Text>ToDo: {dataOverview.tasks.toDo}</Text></OverviewDataItem>
+					<OverviewDataItem><Text>Test: {dataOverview.tasks.test}</Text></OverviewDataItem>
 					<OverviewDataItem><Text>Other: {dataOverview.tasks.other}</Text></OverviewDataItem>
 					<OverviewDataItem><Text>Total: {dataOverview.tasks.total}</Text></OverviewDataItem>
 				</OverviewDataSection>

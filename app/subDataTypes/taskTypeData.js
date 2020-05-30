@@ -28,6 +28,16 @@ const typeMap = [
 		value: 6,
 		displayName: 'PMCS',
 		color: '#5cb85c'
+	},
+	{
+		value: 7,
+		displayName: 'ToDo',
+		color: '#8acb30'
+	},
+	{
+		value: 8,
+		displayName: 'Test',
+		color: '#1e7393'
 	}
 ];
 

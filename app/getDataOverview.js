@@ -47,6 +47,12 @@ function buildTasksOverview(tasks, tasksOverviewObj) {
 			case 6:
 				tasksOverviewObj.pmcs += 1;
 				break;
+			case 7:
+				tasksOverviewObj.toDo += 1;
+				break;
+			case 8:
+				tasksOverviewObj.test += 1;
+				break;
 		}
 	}
 }
@@ -71,6 +77,8 @@ export default function getDataOverview() {
 			other: 0,
 			inspect: 0,
 			pmcs: 0,
+			toDo: 0,
+			test: 0,
 			total: 0
 		},
 		parts: {
