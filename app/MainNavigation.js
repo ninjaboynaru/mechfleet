@@ -4,6 +4,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './Home';
 import Assets from './MainScreens/Assets';
+import Tasks from './MainScreens/Tasks/Tasks';
 import Parts from './MainScreens/Parts';
 import AssetInfo from './MainScreens/AssetInfo';
 import TaskInfo from './MainScreens/TaskInfo';
@@ -24,6 +25,7 @@ export default function MainNavigation() {
 			<stack.Navigator initialRouteName="Home" screenOptions={screenOptions}>
 				<stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
 				<stack.Screen name="Assets" component={Assets} />
+				<stack.Screen name="Tasks" component={Tasks} />
 				<stack.Screen name="Parts" component={Parts} />
 				<stack.Screen name="Asset Info" component={AssetInfo} />
 				<stack.Screen name="Task Info" component={TaskInfo} />

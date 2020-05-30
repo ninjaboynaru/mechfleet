@@ -36,6 +36,7 @@ export default function TaskCard({ task, onPress }) {
 	const typeData = taskTypeData.getTypeData(task.type);
 	const typeName = typeData.displayName;
 	const typeBlockColorStyle = { backgroundColor: typeData.color };
+	const parentName = task.parentName ? <Text>{task.parentName}</Text> : null;
 
 	return (
 		<TouchableOpacity onPress={onPress}>
@@ -43,6 +44,7 @@ export default function TaskCard({ task, onPress }) {
 				<View style={styles.infoBlock}>
 					<H3>{task.name}</H3>
 					<Text>{dateString}</Text>
+					{parentName}
 				</View>
 				<View style={[styles.typeBlock, typeBlockColorStyle]}>
 					<Text style={styles.typeText}>{typeName}</Text>

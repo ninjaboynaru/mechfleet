@@ -74,7 +74,7 @@ class TaskInfo extends React.Component {
 		const dataMeta = this.props.dataMeta;
 		dataMeta.showLoading('Loading Task');
 
-		return taskModel.getTask(this.taskId).then(
+		return taskModel.getTask(this.taskId, true).then(
 			(task) => {
 				dataMeta.hideLoading();
 				if (!task) {
@@ -223,6 +223,7 @@ class TaskInfo extends React.Component {
 					<H1>{task.name}</H1>
 					<Text>Type: {typeText}</Text>
 					<Text>Crated On: {dateString}</Text>
+					<Text>{task.parentName}</Text>
 				</View>
 				<View style={styles.infoControls}>
 					<Button small block style={styles.infoControls__item} onPress={this.onEditPress}>

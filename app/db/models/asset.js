@@ -1,3 +1,4 @@
+/* eslint-disable import/no-cycle */
 import Ajv from 'ajv';
 import jsonata from 'jsonata';
 import shortid from 'shortid';

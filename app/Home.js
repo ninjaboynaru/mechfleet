@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
 		justifyContent: 'space-around'
 	},
 	navButtonStyle: {
-		width: '40%'
+		width: '30%'
 	},
 	dataSection: {
 		marginTop: 24,
@@ -83,6 +83,7 @@ class Home extends React.Component {
 
 	buildNavPanel() {
 		const onAssetsPress = () => this.props.navigation.navigate('Assets');
+		const onTasksPress = () => this.props.navigation.navigate('Tasks');
 		const onPartsPress = () => this.props.navigation.navigate('Parts');
 
 		return (
@@ -90,6 +91,7 @@ class Home extends React.Component {
 				<H1 style={styles.headerStyle}>Mech Fleet</H1>
 				<View style={styles.navPanel}>
 					<Button block style={styles.navButtonStyle} onPress={onAssetsPress}><Text>Assets</Text></Button>
+					<Button block style={styles.navButtonStyle} onPress={onTasksPress}><Text>Tasks</Text></Button>
 					<Button block style={styles.navButtonStyle} onPress={onPartsPress}><Text>Parts</Text></Button>
 				</View>
 			</View>

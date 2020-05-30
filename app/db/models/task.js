@@ -1,7 +1,9 @@
+/* eslint-disable import/no-cycle */
 import Ajv from 'ajv';
 import jsonata from 'jsonata';
 import shortid from 'shortid';
 import fsInterface from '../fsInterface';
+import assetModel from './asset';
 import helpers from '../helpers';
 
 const schema = {
@@ -22,13 +24,31 @@ const schema = {
 
 const validate = new Ajv({ useDefaults: true, removeAdditional: true }).compile(schema);
 
+function appendParentAssetNames(tasks) {
+	return assetModel.getAssets().then((assets) => {
+		for (const task of tasks) {
+			const queryExpression = jsonata(`$[_id='${task.parentAsset}'][0].name`);
+			const parentName = queryExpression.evaluate(assets);
+
+			task.parentName = parentName || null;
+		}
+		return tasks;
+	});
+}
+
 export default new function() {
-	this.getTasks = function() {
-		return fsInterface.readTasksFile();
+	this.getTasks = function(appendParentNames) {
+		return fsInterface.readTasksFile().then((tasks) => {
+			if (appendParentNames === true) {
+				return appendParentAssetNames(tasks);
+			}
+
+			return tasks;
+		});
 	};
 
-	this.getTask = function(taskId) {
-		return this.getTasks().then((tasks) => helpers.getDocumentById(tasks, taskId));
+	this.getTask = function(taskId, appendParentName) {
+		return this.getTasks(appendParentName).then((tasks) => helpers.getDocumentById(tasks, taskId));
 	};
 
 	this.getAssetTasks = function(parentAssetId, complete = false) {
