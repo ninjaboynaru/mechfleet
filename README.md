@@ -2,6 +2,7 @@
 1. Open 2 consoles as an admin
 2. In one console run `npx react-native start`
 3. In the other console run `npx react-native run-android`
+If you receive an `EPERM` `lstat` type error in the console window running `npx react-native start` and you're sure you've run the console as an admin, then switch to the `android` directory and running `./gradlew clean` and try again.
 
 ### How to build apk
 1. `cd` to `android` folder
