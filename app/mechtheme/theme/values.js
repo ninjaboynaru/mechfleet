@@ -1,11 +1,9 @@
 
 const values = {
-	colors: {
-		primary: 'blue',
-		secondary: '',
-		text: '',
-		backgound: ''
-	}
+	primaryColor: 'blue',
+	secondaryColor: '',
+	textColor: '',
+	backgoundColor: ''
 };
 
 export default Object.freeze(values);

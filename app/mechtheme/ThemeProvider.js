@@ -4,7 +4,14 @@ import ThemeContext from './ThemeContext';
 function buildTheme(values, styles) {
 	return {
 		values,
-		styles: styles(values)
+		styles: styles(values),
+		getValue: function getValue(valueName) {
+			const valueExists = Object.prototype.hasOwnProperty.call(values, valueName);
+			if (valueExists === false) {
+				throw new ReferenceError(`Theme has no value named "${valueName}"`);
+			}
+			return values[valueName];
+		}
 	};
 }
 
