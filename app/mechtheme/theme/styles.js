@@ -15,6 +15,10 @@ export default function(getValue) {
 			width: getValue('logoWidth'),
 			height: getValue('logoHeight'),
 			resizeMode: 'contain'
+		},
+		heading: {
+			color: getValue('textColor'),
+			fontWeight: 'bold'
 		}
 	});
 }
