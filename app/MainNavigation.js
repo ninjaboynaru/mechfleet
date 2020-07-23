@@ -26,7 +26,7 @@ export default function MainNavigation() {
 	};
 
 	return (
-		<ThemeProvider values={themeValues} styles={themeStyles}>
+		<ThemeProvider values={themeValues} stylesBuilder={themeStyles}>
 			<NavigationContainer>
 				<stack.Navigator initialRouteName="Fleets" screenOptions={screenOptions}>
 					<stack.Screen name="Fleets" component={Fleets} options={{ headerShown: false }} />
