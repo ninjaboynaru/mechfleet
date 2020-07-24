@@ -7,33 +7,37 @@ function isArray(arr) {
 	return Array.isArray(arr);
 }
 
+function isEmptyObject(obj) {
+	if (!obj) {
+		return true;
+	}
+
+	return Object.keys(obj).length === 0;
+}
+
 /**
 * @function
-* Merges two styles together. Either style can be an object, array of style objects, or null/undefined.
-* If one of the styles is null, it is ignored and not merged.
+* Merges any number of styles together into a single array of styles.
+* Styles can be an object, array of style objects, or null/undefined.
+* If a style is null/undefined or an empty object, it is ignored and not merged.
 *
-* @returns {Array} Returns an array of styles. If both styles are null/undefined, an empty array is returned.
+* @returns {Array} Returns an array of styles.
+* If all styles are null/undefined or empty objects, an empty array is returned.
 */
-export default function mergeStyles(baseStyle, otherStyle) {
-	const baseIsObject = isObject(baseStyle);
-	const baseIsArray = isArray(baseStyle);
-	const otherIsObject = isObject(otherStyle);
-	const otherIsArray = isArray(otherStyle);
-
+export default function mergeStyles(...styles) {
 	const mergedStyles = [];
 
-	if (baseIsObject) {
-		mergedStyles.push(baseStyle);
-	}
-	else if (baseIsArray) {
-		mergedStyles.push(...baseStyle);
-	}
+	for (const style of styles) {
+		const styleIsObject = isObject(style);
+		const styleIsArray = isArray(style);
+		const styleIsEmptyObject = isEmptyObject(style);
 
-	if (otherIsObject) {
-		mergedStyles.push(otherStyle);
-	}
-	else if (otherIsArray) {
-		mergedStyles.push(...otherStyle);
+		if (styleIsObject === true && styleIsEmptyObject === false) {
+			mergedStyles.push(style);
+		}
+		else if (styleIsArray === true) {
+			mergedStyles.push(...style);
+		}
 	}
 
 	return mergedStyles;

@@ -1,33 +1,33 @@
 import React from 'react';
 import { Text } from 'react-native';
-import { Themed } from './mechtheme';
-import { Container, Logo } from './uicomponents';
-import db from './realmdb';
+import { Themed } from '../mechtheme';
+import { Container, Logo } from '../uicomponents';
+import FleetList from './FleetList';
+import { db } from '../realmdb';
 
 class Fleets extends React.Component {
 	constructor(props) {
 		super(props);
-		this.state = { dbinit: false, dbinitError: false };
+		this.state = { dbinit: false, dbinitError: false, fleets: null };
 	}
 
 	componentDidMount() {
 		if (db.isInitialized() === false) {
-			db.init().then(
-				() => {
-					this.setState({ dbinit: true });
-				},
-				() => {
-					this.setState({ dbinitError: true });
-				}
-			);
+			db.init().then(() => {
+				this.setState({ dbinit: true, fleets: db.models.fleet.getAll() });
+			})
+			.catch((error) => {
+				console.error(error);
+				this.setState({ dbinitError: true });
+			});
 		}
 		else {
-			this.setState({ dbinit: true });
+			this.setState({ dbinit: true, fleets: db.models.fleet.getAll() });
 		}
 	}
 
 	buildFleetList() {
-		return <Text>Fleet List</Text>;
+		return <FleetList fleets={this.state.fleets} />;
 	}
 
 	buildLoadingUi() {
@@ -53,7 +53,7 @@ class Fleets extends React.Component {
 		}
 
 		return (
-			<Container>
+			<Container center>
 				<Logo />
 				{toRender}
 			</Container>

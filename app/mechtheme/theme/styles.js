@@ -6,7 +6,6 @@ export default function(getValue) {
 			width: '100%',
 			height: '100%',
 			flexDirection: 'column',
-			justifyContent: 'center',
 			alignItems: 'center',
 			backgroundColor: getValue('backgroundColor'),
 			padding: getValue('mainContainerPadding')
@@ -19,6 +18,10 @@ export default function(getValue) {
 		heading: {
 			color: getValue('textColor'),
 			fontWeight: 'bold'
+		},
+		text: {
+			fontSize: getValue('fontSize'),
+			color: getValue('textColor')
 		}
 	});
 }

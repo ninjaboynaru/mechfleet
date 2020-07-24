@@ -2,7 +2,7 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Fleets from './Fleets';
+import Fleets from './FleetsScreen/Fleets';
 import Home from './Home';
 import Assets from './MainScreens/Assets';
 import Tasks from './MainScreens/Tasks/Tasks';

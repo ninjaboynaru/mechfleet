@@ -1,4 +1,5 @@
-/* eslint-disable import/prefer-default-export */
 import fleet from './fleet';
+import asset from './asset';
 
-export { fleet };
+const schemas = [fleet, asset];
+export { schemas, fleet, asset };

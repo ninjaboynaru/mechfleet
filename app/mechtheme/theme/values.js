@@ -4,9 +4,11 @@ const values = {
 	primaryColor: 'blue',
 	secondaryColor: '',
 	textColor: '#464646',
-	backgroundColor: 'white',
+	backgroundColor: '#FDFCFC',
+	backgroundSurfaceColor: 'white',
 
 	fontSize: 12,
+	fontSizeSmall: 8,
 	fontSizeH1: 28,
 	fontSizeH2: 24,
 	fontSizeH3: 20,
@@ -16,7 +18,10 @@ const values = {
 	logoWidth: 140,
 	logoHeight: 140,
 
-	mainContainerPadding: 24
+	mainContainerPadding: 24,
+	standardPadding: 4,
+	standardMargin: 4,
+	expandedListItemMargin: 16
 };
 
 export default Object.freeze(values);
