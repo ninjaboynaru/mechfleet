@@ -1,30 +1,39 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { View, Button as ReactNativeButton } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { Themed } from '../mechtheme';
+import Text from './Text';
+import mergeStyles from './mergeStyles';
+import stylePropType from './stylePropType';
 
-function Button({ onPress, title, theme, ...props }) {
+function Button({ onPress, text, children, style, theme, ...props }) {
+	const finalStyle = mergeStyles(theme.getStyle('button'), style);
+
+	let content = children;
+	if (text) {
+		content = <Text style={theme.getStyle('buttonText')}>{text}</Text>;
+	}
+
 	return (
-		<View style={theme.getStyle('buttonWrapper')}>
-			<ReactNativeButton
-				color={theme.getValue('primaryColor')}
-				onPress={onPress}
-				title={title}
-				{...props}
-			/>
-		</View>
+		<TouchableOpacity activeOpacity={0.6} onPress={onPress} style={finalStyle} {...props}>
+			{content}
+		</TouchableOpacity>
 	);
 }
 
 Button.propTypes = {
 	onPress: PropTypes.func,
-	title: PropTypes.string,
+	text: PropTypes.string,
+	children: PropTypes.node,
+	style: stylePropType,
 	theme: Themed.themePropType.isRequired
 };
 
 Button.defaultProps = {
 	onPress: () => {},
-	title: ''
+	text: null,
+	children: null,
+	style: null
 };
 
 export default Themed(Button);

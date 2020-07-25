@@ -24,7 +24,12 @@ const values = {
 	standardMargin: 4,
 	expandedListItemMargin: 16,
 
-	buttonStandardMargin: 12
+	buttonStandardMargin: 12,
+	buttonStandardPadding: 10,
+	buttonBorderRadius: 6,
+	get buttonContentSize() { return this.fontSizeLarge },
+	get buttonPrimaryColor() { return this.primaryColor },
+	buttonPrimaryContentColor: 'white'
 };
 
 export default Object.freeze(values);

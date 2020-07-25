@@ -23,8 +23,18 @@ export default function(getValue) {
 			fontSize: getValue('fontSize'),
 			color: getValue('textColor')
 		},
-		buttonWrapper: {
-			margin: getValue('buttonStandardMargin')
+		button: {
+			justifyContent: 'center',
+			alignItems: 'center',
+			margin: getValue('buttonStandardMargin'),
+			padding: getValue('buttonStandardPadding'),
+			backgroundColor: getValue('buttonPrimaryColor'),
+			borderRadius: getValue('buttonBorderRadius')
+		},
+		buttonText: {
+			fontSize: getValue('buttonContentSize'),
+			fontWeight: 'bold',
+			color: getValue('buttonPrimaryContentColor')
 		}
 	});
 }

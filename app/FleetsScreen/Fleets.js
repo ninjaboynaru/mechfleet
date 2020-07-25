@@ -9,6 +9,11 @@ class Fleets extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = { dbinit: false, dbinitError: false, fleets: null };
+		this.onNewFleetPress = this.onNewFleetPress.bind(this);
+	}
+
+	onNewFleetPress() {
+		console.log('NEW FLEET PRESSED');
 	}
 
 	componentDidMount() {
@@ -56,7 +61,7 @@ class Fleets extends React.Component {
 			<Container center>
 				<Logo />
 				{toRender}
-				<Button title="New Fleet" />
+				<Button onPress={this.onNewFleetPress} text="New Fleet" style={{ minWidth: 150 }} />
 			</Container>
 		);
 	}
