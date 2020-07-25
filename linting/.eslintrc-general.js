@@ -18,6 +18,7 @@ module.exports = {
 		'default-case': 0,
 		'class-methods-use-this': 0,
 		'no-useless-constructor': 0,
+		'import/no-unresolved': [2, {'ignore': ['native-base']}],
 		'semi': ['error', 'always', { 'omitLastInOneLineBlock': true }],
 		'object-curly-newline': ['error', {'consistent':true}],
 		'space-before-function-paren': ['error', 'never'],

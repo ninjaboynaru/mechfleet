@@ -1,53 +1,12 @@
 import React from 'react';
-import { YellowBox, StyleSheet, View } from 'react-native';
-import { StyleProvider, Root, H1 } from 'native-base';
-import getTheme from './native-base-theme/components';
-import theme from './native-base-theme/variables/custom';
-import { ErrorDisplay, LoadingDisplay } from './app/metaComponents';
+import { YellowBox } from 'react-native';
 import MainNavigation from './app/MainNavigation';
-import fsInterface from './app/db/fsInterface';
 
 YellowBox.ignoreWarnings([
 	'VirtualizedLists should never be nested',
 	'Animated: `useNativeDriver` was not specified. This is a required'
-])
+]);
 
-export default class App extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = { dbInitialized: false, dbInitializeError: false };
-	}
-
-	componentDidMount() {
-		fsInterface.ensureFileIntegrity().then(
-			() => {
-				this.setState({ dbInitialized: true });
-			},
-			() => {
-				this.setState({ dbInitializeError: true });
-			}
-		)
-	}
-
-	render() {
-		const { dbInitialized, dbInitializeError } = this.state;
-		let toRender = null;
-
-		if (dbInitializeError === true) {
-			toRender = <ErrorDisplay>Error Initializing Data Storage</ErrorDisplay>
-		}
-		else if (dbInitialized === false) {
-			toRender = <LoadingDisplay>Initializing Data Storage</LoadingDisplay>
-		}
-		else {
-			toRender = <MainNavigation/>
-		}
-		return (
-			<Root>
-				<StyleProvider style={getTheme(theme)}>
-					{toRender}
-				</StyleProvider>
-			</Root>
-		);
-	}
+export default function App() {
+	return <MainNavigation />
 }
