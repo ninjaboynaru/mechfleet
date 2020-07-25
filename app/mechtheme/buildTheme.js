@@ -5,7 +5,7 @@
 * @property {Object} values - Object where each property corisponds to a theme value (colors, sizes, etc...)
 * @property {Object} styles - Object where each property is a react-native style
 * @property {Function} getValue - Given a value name as a string, will return that value or throw an error if it does not exist
-* @property {Function} getStyle - Given a styleName as a string, will return that style or throw an error if it does not exist
+* @property {Function} getStyle - Given a styleName as a string (or multiple style names), will return that style or throw an error if it does not exist. If multiple styleNames are provided, will return an array of styles and will throw an error if any of the provided styleNames do not exist..
 */
 
 /**
@@ -24,12 +24,27 @@ export default function buildTheme(values, stylesBuilder) {
 
 	const styles = stylesBuilder(getValue);
 
-	function getStyle(styleName) {
-		const styleExists = Object.prototype.hasOwnProperty.call(styles, styleName);
-		if (styleExists === false) {
-			throw new ReferenceError(`Theme has no style named "${styleName}"`);
+	function getStyle(...styleNames) {
+		const foundStyles = [];
+
+		for (const name of styleNames) {
+			const styleExists = Object.prototype.hasOwnProperty.call(styles, name);
+
+			if (styleExists === false) {
+				throw new ReferenceError(`Theme has no style named "${name}"`);
+			}
+
+			foundStyles.push(styles[name]);
 		}
-		return styles[styleName];
+
+		if (foundStyles.length === 0) {
+			return null;
+		}
+		if (foundStyles.length === 1) {
+			return foundStyles[0];
+		}
+
+		return foundStyles;
 	}
 
 	return {

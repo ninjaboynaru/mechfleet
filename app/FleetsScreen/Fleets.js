@@ -1,7 +1,7 @@
 import React from 'react';
-import { Text } from 'react-native';
+import PropTypes from 'prop-types';
 import { Themed } from '../mechtheme';
-import { Container, Logo, Button } from '../uicomponents';
+import { Container, Logo, Button, Text } from '../uicomponents';
 import FleetList from './FleetList';
 import { db } from '../realmdb';
 
@@ -9,14 +9,13 @@ class Fleets extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = { dbinit: false, dbinitError: false, fleets: null };
+		this.onFocus = this.onFocus.bind(this);
 		this.onNewFleetPress = this.onNewFleetPress.bind(this);
+
+		this.props.navigation.addListener('focus', this.onFocus);
 	}
 
-	onNewFleetPress() {
-		console.log('NEW FLEET PRESSED');
-	}
-
-	componentDidMount() {
+	onFocus() {
 		if (db.isInitialized() === false) {
 			db.init().then(() => {
 				this.setState({ dbinit: true, fleets: db.models.fleet.getAll() });
@@ -29,6 +28,10 @@ class Fleets extends React.Component {
 		else {
 			this.setState({ dbinit: true, fleets: db.models.fleet.getAll() });
 		}
+	}
+
+	onNewFleetPress() {
+		this.props.navigation.navigate('Edit Fleet');
 	}
 
 	buildFleetList() {
@@ -66,5 +69,12 @@ class Fleets extends React.Component {
 		);
 	}
 }
+
+Fleets.propType = {
+	navigation: PropTypes.shape({
+		navigate: PropTypes.func.isRequired,
+		addListener: PropTypes.func.isRequired
+	}).isRequired
+};
 
 export default Themed(Fleets);

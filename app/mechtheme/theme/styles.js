@@ -23,18 +23,52 @@ export default function(getValue) {
 			fontSize: getValue('fontSize'),
 			color: getValue('textColor')
 		},
-		button: {
+		buttonLayout: {
 			justifyContent: 'center',
 			alignItems: 'center',
 			margin: getValue('buttonStandardMargin'),
-			padding: getValue('buttonStandardPadding'),
+			padding: getValue('buttonStandardPadding')
+		},
+		buttonTextLayout: {
+			fontSize: getValue('buttonContentSize'),
+			fontWeight: 'bold'
+		},
+		buttonPrimary: {
 			backgroundColor: getValue('buttonPrimaryColor'),
 			borderRadius: getValue('buttonBorderRadius')
 		},
-		buttonText: {
-			fontSize: getValue('buttonContentSize'),
-			fontWeight: 'bold',
+		buttonPrimaryText: {
 			color: getValue('buttonPrimaryContentColor')
+		},
+		formItem: {
+			width: '100%',
+			marginTop: getValue('itemVerticalMargin'),
+			justifyContent: 'flex-start',
+			alignItems: 'flex-start'
+		},
+		formItemError: {
+			borderBottomWidth: 1,
+			borderColor: getValue('dangerColor')
+		},
+		label: {
+			color: getValue('labelColor'),
+			marginBottom: getValue('labelBottomMargin')
+		},
+		fieldErrorMessage: {
+			fontSize: getValue('fontSize'),
+			color: getValue('dangerColor')
+		},
+		baseTextField: {
+			width: '100%',
+			fontSize: getValue('textFieldFontSize'),
+			elevation: 2,
+			backgroundColor: getValue('surfaceOnBackgroundColor')
+		},
+		textInput: {
+		},
+		textArea: {
+			maxHeight: 100,
+			textAlignVertical: 'top'
 		}
 	});
 }

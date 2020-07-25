@@ -7,13 +7,13 @@ import mergeStyles from './mergeStyles';
 import stylePropType from './stylePropType';
 
 function Button({ onPress, text, children, style, theme, ...props }) {
-	const finalStyle = mergeStyles(theme.getStyle('button'), style);
-
 	let content = children;
 	if (text) {
-		content = <Text style={theme.getStyle('buttonText')}>{text}</Text>;
+		const textStyle = theme.getStyle('buttonTextLayout', 'buttonPrimaryText');
+		content = <Text style={textStyle}>{text}</Text>;
 	}
 
+	const finalStyle = mergeStyles(theme.getStyle('buttonLayout', 'buttonPrimary'), style);
 	return (
 		<TouchableOpacity activeOpacity={0.6} onPress={onPress} style={finalStyle} {...props}>
 			{content}
