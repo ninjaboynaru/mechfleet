@@ -5,11 +5,14 @@ import { Themed } from '../mechtheme';
 import mergeStyles from './mergeStyles';
 import stylePropType from './stylePropType';
 
-function Text({ theme, children, small, style, ...props }) {
+function Text({ small, large, children, theme, style, ...props }) {
 	const customStyling = {};
 
 	if (small === true) {
 		customStyling.fontSize = theme.getValue('fontSizeSmall');
+	}
+	else if (large === true) {
+		customStyling.fontSize = theme.getValue('fontSizeLarge');
 	}
 
 	const finalStyle = mergeStyles(theme.getStyle('text'), customStyling, style);
@@ -17,15 +20,17 @@ function Text({ theme, children, small, style, ...props }) {
 }
 
 Text.propTypes = {
-	theme: Themed.themePropType.isRequired,
-	children: PropTypes.node.isRequired,
 	small: PropTypes.bool,
+	large: PropTypes.bool,
+	children: PropTypes.node.isRequired,
+	theme: Themed.themePropType.isRequired,
 	style: stylePropType
 };
 
 Text.defaultProps = {
-	style: null,
-	small: false
+	small: false,
+	large: false,
+	style: null
 };
 
 export default Themed(Text);

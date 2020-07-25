@@ -22,6 +22,9 @@ export default function(getValue) {
 		text: {
 			fontSize: getValue('fontSize'),
 			color: getValue('textColor')
+		},
+		buttonWrapper: {
+			margin: getValue('buttonStandardMargin')
 		}
 	});
 }

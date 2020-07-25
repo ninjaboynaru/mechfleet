@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text } from 'react-native';
 import { Themed } from '../mechtheme';
-import { Container, Logo } from '../uicomponents';
+import { Container, Logo, Button } from '../uicomponents';
 import FleetList from './FleetList';
 import { db } from '../realmdb';
 
@@ -56,6 +56,7 @@ class Fleets extends React.Component {
 			<Container center>
 				<Logo />
 				{toRender}
+				<Button title="New Fleet" />
 			</Container>
 		);
 	}
