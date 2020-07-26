@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { db, schemas } from 'mechdb';
+import { db } from 'mechdb';
 import { Container, Button, FormItem, Label, FieldErrorMessage, TextInput, TextArea } from 'mechui';
 
 export default class EditFleet extends React.Component {
@@ -13,11 +13,12 @@ export default class EditFleet extends React.Component {
 		this.onDescriptionChange = this.onDescriptionChange.bind(this);
 
 		this.state = {};
-		this.sourceFleet = this.props.route.params;
 		this.state.fieldErrors = { name: null };
+		this.sourceFleetId = this.props.route.params;
 
-		if (this.sourceFleet) {
-			this.state.fleet = { name: this.sourceFleet.name, description: this.sourceFleet.description };
+		if (this.sourceFleetId) {
+			const sourceFleet = db.models.Fleet.getById(this.sourceFleetId);
+			this.state.fleet = { name: sourceFleet.name, description: sourceFleet.description };
 		}
 		else {
 			this.state.fleet = { name: '', description: '' };
@@ -60,7 +61,13 @@ export default class EditFleet extends React.Component {
 			return;
 		}
 
-		db.models.fleet.create(this.state.fleet);
+		if (this.sourceFleetId) {
+			db.models.Fleet.update(this.sourceFleetId, this.state.fleet);
+		}
+		else {
+			db.models.Fleet.create(this.state.fleet);
+		}
+
 		this.props.navigation.goBack();
 	}
 
@@ -100,7 +107,7 @@ export default class EditFleet extends React.Component {
 
 EditFleet.propTypes = {
 	route: PropTypes.shape({
-		params: schemas.fleet.propType
+		params: PropTypes.string
 	}).isRequired,
 	navigation: PropTypes.shape({
 		goBack: PropTypes.func.isRequired,

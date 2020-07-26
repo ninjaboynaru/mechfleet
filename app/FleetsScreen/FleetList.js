@@ -1,23 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, View, FlatList } from 'react-native';
+import { View, FlatList } from 'react-native';
 
 import { schemas } from 'mechdb';
 import FleetListItem from './FleetListItem';
 
-const styles = StyleSheet.create({
-	listContainer: {
-		// width: 200
-	},
-	list: {
-
-	}
-});
-
-export default function FleetList({ fleets }) {
-	const renderItem = ({ item }) => <FleetListItem fleet={item} />;
+export default function FleetList({ fleets, editFleet, deleteFleet }) {
+	const renderItem = ({ item }) => <FleetListItem fleet={item} editFleet={editFleet} deleteFleet={deleteFleet} />;
 	return (
-		<View style={styles.listContainer}>
+		<View>
 			<FlatList data={fleets} renderItem={renderItem} style={{ flexGrow: 0 }} />
 		</View>
 	);
@@ -25,7 +16,9 @@ export default function FleetList({ fleets }) {
 
 
 FleetList.propTypes = {
-	fleets: PropTypes.objectOf(schemas.fleet.propType)
+	fleets: PropTypes.objectOf(schemas.fleet.propType),
+	editFleet: PropTypes.func.isRequired,
+	deleteFleet: PropTypes.func.isRequired
 };
 
 FleetList.defaultProps = {

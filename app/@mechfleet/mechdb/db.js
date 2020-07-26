@@ -16,7 +16,7 @@ export default new function() {
 		return Realm.open({ schemaVersion: 0, schema: schemas }).then((realm) => {
 			initialized = true;
 			this.models = {
-				fleet: fleet(realm)
+				Fleet: fleet(realm)
 			};
 		});
 	};

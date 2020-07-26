@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
@@ -25,7 +26,7 @@ class FleetListItem extends React.Component {
 		this.menuRef = null;
 
 		this.setMenuRef = this.setMenuRef.bind(this);
-		this.shoeMenu = this.shoeMenu.bind(this);
+		this.showMenu = this.showMenu.bind(this);
 		this.hideMenu = this.hideMenu.bind(this);
 		this.onEditPress = this.onEditPress.bind(this);
 		this.onDeletePress = this.onDeletePress.bind(this);
@@ -35,22 +36,22 @@ class FleetListItem extends React.Component {
 		this.menuRef = ref;
 	}
 
-	shoeMenu() {
+	showMenu() {
 		this.menuRef.show();
-		console.log('SHOW MENU PRESSED');
 	}
 
 	hideMenu() {
 		this.menuRef.hide();
-		console.log('HIDE MENU');
 	}
 
 	onEditPress() {
-		console.log('FLEET EDIT PRESSED');
+		this.hideMenu();
+		this.props.editFleet(this.props.fleet);
 	}
 
 	onDeletePress() {
-		console.log('FLEET DELETE PRESSED');
+		this.hideMenu();
+		this.props.deleteFleet(this.props.fleet);
 	}
 
 	render() {
@@ -65,7 +66,7 @@ class FleetListItem extends React.Component {
 
 		const menuButton = (
 			<Icon
-				onPress={this.shoeMenu}
+				onPress={this.showMenu}
 				name="ellipsis-v"
 				color={theme.getValue('menuIconColor')}
 				size={theme.getValue('fontSizeLarge')}
@@ -92,7 +93,9 @@ class FleetListItem extends React.Component {
 
 FleetListItem.propTypes = {
 	theme: Themed.themePropType.isRequired,
-	fleet: schemas.fleet.propType.isRequired
+	fleet: schemas.fleet.propType.isRequired,
+	editFleet: PropTypes.func.isRequired,
+	deleteFleet: PropTypes.func.isRequired
 };
 
 export default Themed(FleetListItem);

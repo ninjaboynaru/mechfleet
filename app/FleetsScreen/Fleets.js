@@ -5,20 +5,25 @@ import { Container, Logo, Button, Text } from 'mechui';
 import { db } from 'mechdb';
 import FleetList from './FleetList';
 
+
 class Fleets extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = { dbinit: false, dbinitError: false, fleets: null };
 		this.onFocus = this.onFocus.bind(this);
-		this.onNewFleetPress = this.onNewFleetPress.bind(this);
+		this.newFleet = this.newFleet.bind(this);
+		this.editFleet = this.editFleet.bind(this);
+		this.deleteFleet = this.deleteFleet.bind(this);
+	}
 
+	componentDidMount() {
 		this.props.navigation.addListener('focus', this.onFocus);
 	}
 
 	onFocus() {
 		if (db.isInitialized() === false) {
 			db.init().then(() => {
-				this.setState({ dbinit: true, fleets: db.models.fleet.getAll() });
+				this.setState({ dbinit: true, fleets: db.models.Fleet.getAll() });
 			})
 			.catch((error) => {
 				console.error(error);
@@ -26,16 +31,24 @@ class Fleets extends React.Component {
 			});
 		}
 		else {
-			this.setState({ dbinit: true, fleets: db.models.fleet.getAll() });
+			this.setState({ dbinit: true, fleets: db.models.Fleet.getAll() });
 		}
 	}
 
-	onNewFleetPress() {
+	newFleet() {
 		this.props.navigation.navigate('Edit Fleet');
 	}
 
+	editFleet(fleet) {
+		this.props.navigation.navigate('Edit Fleet', fleet.id);
+	}
+
+	deleteFleet(fleet) {
+		console.log('DELETE FLEET', fleet.id);
+	}
+
 	buildFleetList() {
-		return <FleetList fleets={this.state.fleets} />;
+		return <FleetList fleets={this.state.fleets} editFleet={this.editFleet} deleteFleet={this.deleteFleet} />;
 	}
 
 	buildLoadingUi() {
@@ -64,7 +77,7 @@ class Fleets extends React.Component {
 			<Container center>
 				<Logo />
 				{toRender}
-				<Button onPress={this.onNewFleetPress} text="New Fleet" style={{ minWidth: 150 }} />
+				<Button onPress={this.newFleet} text="New Fleet" style={{ minWidth: 150 }} />
 			</Container>
 		);
 	}

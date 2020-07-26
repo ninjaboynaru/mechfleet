@@ -1,15 +1,33 @@
+import Realm from 'realm';
 import 'react-native-get-random-values'; // Need to import this for uuid to work'
 import { v1 as uuidv1 } from 'uuid';
 import { fleet as schema } from '../schemas';
 
-export default (realm) => new function() {
-	this.getAll = function() {
-		return realm.objects(schema.name).snapshot();
-	};
+export default (realm) => class Fleet extends Realm.Object {
+	static get schema() { return schema }
 
-	this.create = function({ name, description }) {
+	static getAll() {
+		return realm.objects(schema.name);
+	}
+
+	static getById(id) {
+		return realm.objectForPrimaryKey(schema.name, id);
+	}
+
+	static create({ id, name, description }) {
 		realm.write(() => {
-			realm.create(schema.name, { id: uuidv1(), name, description });
+			let isUpdate = true;
+
+			if (!id) {
+				id = uuidv1();
+				isUpdate = false;
+			}
+
+			realm.create(schema.name, { id, name, description }, isUpdate);
 		});
-	};
-}();
+	}
+
+	static update(id, { name, description }) {
+		Fleet.create({ id, name, description });
+	}
+};
