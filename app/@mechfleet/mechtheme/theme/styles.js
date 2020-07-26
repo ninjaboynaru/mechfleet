@@ -23,6 +23,9 @@ export default function(getValue) {
 			fontSize: getValue('fontSize'),
 			color: getValue('textColor')
 		},
+
+
+		// Buttons
 		buttonLayout: {
 			justifyContent: 'center',
 			alignItems: 'center',
@@ -37,9 +40,18 @@ export default function(getValue) {
 			backgroundColor: getValue('buttonPrimaryColor'),
 			borderRadius: getValue('buttonBorderRadius')
 		},
+		buttonPlain: {
+
+		},
 		buttonPrimaryText: {
 			color: getValue('buttonPrimaryContentColor')
 		},
+		buttonPrimaryPlainText: {
+			color: getValue('buttonPrimaryColor')
+		},
+
+
+		// Forms
 		formItem: {
 			width: '100%',
 			marginTop: getValue('itemVerticalMargin'),
@@ -69,6 +81,44 @@ export default function(getValue) {
 		textArea: {
 			maxHeight: 100,
 			textAlignVertical: 'top'
+		},
+
+
+		// Modal
+		modal: {
+			zIndex: 100,
+			position: 'absolute',
+			width: '100%',
+			height: '100%',
+			justifyContent: 'center',
+			alignItems: 'center'
+		},
+		modalBackground: {
+			position: 'absolute',
+			width: '100%',
+			height: '100%',
+			backgroundColor: getValue('modalBackgroundColor')
+		},
+		modalContent: {
+			maxWidth: '90%',
+			minWidth: '40%',
+			minHeight: 100,
+			paddingHorizontal: 18,
+			paddingTop: 18,
+			borderRadius: 4,
+			backgroundColor: getValue('modalContentBackgroundColor')
+		},
+		modalTitle: {
+			paddingBottom: 12
+		},
+		modalBody: {
+
+		},
+		modalControls: {
+			marginTop: 16,
+			flexDirection: 'row',
+			justifyContent: 'flex-end',
+			alignItems: 'center'
 		}
 	});
 }

@@ -46,7 +46,11 @@ const values = {
 	get itemVerticalMargin() { return this.standardMargin * 4 },
 	get textFieldFontSize() { return this.fontSizeLarge },
 	get textFieldShadowColor() { return this.textColor },
-	get labelBottomMargin() { return this.standardMargin * 1 }
+	get labelBottomMargin() { return this.standardMargin * 1 },
+
+	// Modal
+	modalBackgroundColor: 'rgba(0,0,0,0.6)',
+	get modalContentBackgroundColor() { return this.backgroundColor }
 };
 
 export default Object.freeze(values);

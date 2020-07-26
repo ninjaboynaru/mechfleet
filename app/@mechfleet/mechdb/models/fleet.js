@@ -30,4 +30,10 @@ export default (realm) => class Fleet extends Realm.Object {
 	static update(id, { name, description }) {
 		Fleet.create({ id, name, description });
 	}
+
+	static delete(fleet) {
+		realm.write(() => {
+			realm.delete(fleet);
+		});
+	}
 };

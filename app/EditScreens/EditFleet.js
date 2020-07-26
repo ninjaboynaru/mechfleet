@@ -29,8 +29,8 @@ export default class EditFleet extends React.Component {
 	}
 
 	setHeaderOptions() {
-		const buttonLeft = <Button onPress={this.goBack} text="Cancel" />;
-		const buttonRight = <Button onPress={this.save} text="Done" />;
+		const buttonLeft = <Button primary onPress={this.goBack} text="Cancel" />;
+		const buttonRight = <Button primary onPress={this.save} text="Done" />;
 		this.props.navigation.setOptions({
 			headerLeft: () => buttonLeft,
 			headerRight: () => buttonRight

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Themed } from 'mechtheme';
-import { Container, Logo, Button, Text } from 'mechui';
+import { Container, Logo, Button, Text, WithConfirmationModal } from 'mechui';
 import { db } from 'mechdb';
 import FleetList from './FleetList';
 
@@ -44,7 +44,16 @@ class Fleets extends React.Component {
 	}
 
 	deleteFleet(fleet) {
-		console.log('DELETE FLEET', fleet.id);
+		const title = 'Are you sure?';
+		const body = 'Are you sure you want to delete this fleet. This can not be undone';
+		const cancelText = 'CANCEL';
+		const confirmText = 'DELETE';
+		const onConfirm = () => {
+			db.models.Fleet.delete(fleet);
+			this.forceUpdate();
+		};
+
+		this.props.showModal(title, body, cancelText, confirmText, null, onConfirm);
 	}
 
 	buildFleetList() {
@@ -77,17 +86,18 @@ class Fleets extends React.Component {
 			<Container center>
 				<Logo />
 				{toRender}
-				<Button onPress={this.newFleet} text="New Fleet" style={{ minWidth: 150 }} />
+				<Button primary onPress={this.newFleet} text="New Fleet" style={{ minWidth: 150 }} />
 			</Container>
 		);
 	}
 }
 
 Fleets.propType = {
+	showModal: PropTypes.func.isRequired,
 	navigation: PropTypes.shape({
 		navigate: PropTypes.func.isRequired,
 		addListener: PropTypes.func.isRequired
 	}).isRequired
 };
 
-export default Themed(Fleets);
+export default Themed(WithConfirmationModal(Fleets));
