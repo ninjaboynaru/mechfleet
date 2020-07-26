@@ -2,9 +2,9 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import Menu, { MenuItem, MenuDivider } from 'react-native-material-menu';
-import { schemas } from '../realmdb';
-import { Themed } from '../mechtheme';
-import { mergeStyles, Text, H1 } from '../uicomponents';
+import { schemas } from 'mechdb';
+import { Themed } from 'mechtheme';
+import { mergeStyles, Text, H1 } from 'mechui';
 
 const styles = StyleSheet.create({
 	itemContainer: {

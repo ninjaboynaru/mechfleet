@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { db, schemas } from '../realmdb';
-import { Container, Button, FormItem, Label, FieldErrorMessage, TextInput, TextArea } from '../uicomponents';
+import { db, schemas } from 'mechdb';
+import { Container, Button, FormItem, Label, FieldErrorMessage, TextInput, TextArea } from 'mechui';
 
 export default class EditFleet extends React.Component {
 	constructor(props) {

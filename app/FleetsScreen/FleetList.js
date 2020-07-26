@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View, FlatList } from 'react-native';
 
-import { schemas } from '../realmdb';
+import { schemas } from 'mechdb';
 import FleetListItem from './FleetListItem';
 
 const styles = StyleSheet.create({

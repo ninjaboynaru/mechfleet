@@ -21,6 +21,11 @@ module.exports = {
 		ecmaVersion: 2018,
 		sourceType: 'module',
 	},
+	settings: {
+		"import/resolver": {
+			"babel-module": {}
+		},
+	},
 	plugins: [
 		'react',
 	],

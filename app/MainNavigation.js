@@ -2,12 +2,12 @@ import React from 'react';
 import 'react-native-gesture-handler';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Fleets from './FleetsScreen/Fleets';
-import EditFleet from './EditScreens/EditFleet';
 
-import { ThemeProvider } from './mechtheme';
-import themeValues from './mechtheme/theme/values';
-import themeStyles from './mechtheme/theme/styles';
+import { ThemeProvider } from 'mechtheme';
+import themeValues from 'mechtheme/theme/values';
+import themeStyles from 'mechtheme/theme/styles';
+import EditFleet from './EditScreens/EditFleet';
+import Fleets from './FleetsScreen/Fleets';
 
 const stack = createStackNavigator();
 
