@@ -1,3 +1,15 @@
+# MechFleet - LEGACY
+
+# Project Structure
+### Global Imports
+Global imports are achieved through the use of the `babel-plugin-module-resolver` package.  
+Global, general use, custom packages/files are stored in the `app/@mechtheme` directory.  
+These include custom packages such as the database, general use UI components, and theming.  
+
+ESLint is made aware of these global imports through the use of the `eslint-import-resolver-babel-module`.
+
+
+# Building and Running
 ### Running in development
 1. Open 2 consoles as an admin
 2. In one console run `npx react-native start`
